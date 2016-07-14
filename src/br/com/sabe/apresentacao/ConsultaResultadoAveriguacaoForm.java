@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 package br.com.sabe.apresentacao;
+import br.com.sabe.entidade.ResultadoAveriguacao;
 import br.com.sabe.entidade.Usuario;
+import br.com.sabe.negocio.ResultadoAveriguacaoBO;
 import br.com.sabe.negocio.UsuarioBO;
 import br.com.sabe.persistencia.UsuarioDAO;
 import java.sql.SQLException;
@@ -20,11 +22,41 @@ import javax.swing.table.AbstractTableModel;
  */
 public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
     ConsultaResultadoAveriguacaoForm consultaResultadoAveriguacao = null;
+    List<ResultadoAveriguacao> listaResultadoAveriguacao = new ArrayList<>();
     /**
      * Creates new form ConsultarResultadoAveriguacao
      */
     public ConsultaResultadoAveriguacaoForm() {
         initComponents();
+    }   
+    public void prepararTela(){
+        try {
+            this.initComponents();
+            this.carregarTabelaPedidoAveriguacao();
+            //this.carregarComboLocalidade();
+        } catch (Exception e) {
+            String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
+            mensagem += "\nMensagem de erro:\n" + e.getMessage();
+            JOptionPane.showMessageDialog(this, mensagem, "Pesquisar Usuarios", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+        }
+    }
+   /* public void carregarComboLocalidade() throws SQLException {
+        PedidoAveriguacaoBO pedidoAveriguacaoBO = new PedidoAveriguacaoBO();
+        this.listaPedidoAveriguacao = pedidoAveriguacaoBO.buscarTodos();
+
+        this.cmbLocalidade.removeAllItems();
+        
+        for(PedidoAveriguacao pedidoAveriguacao: listaPedidoAveriguacao){
+            this.cmbLocalidade.addItem(pedidoAveriguacao.beneficiario.getLocalidade());
+        }
+    }*/
+    public void carregarTabelaPedidoAveriguacao() throws SQLException{
+        ResultadoAveriguacaoBO resultadoAveriguacaoBO = new ResultadoAveriguacaoBO();
+        listaResultadoAveriguacao = resultadoAveriguacaoBO.buscarTodos();
+
+        ModeloTabelaResultadoAveriguacao modelo = new ModeloTabelaResultadoAveriguacao();
+        tblResultadoAveriguacao.setModel(modelo);
     }
 
     /**
@@ -38,7 +70,7 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
 
         pnlResultado2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblResultado = new javax.swing.JTable();
+        tblResultadoAveriguacao = new javax.swing.JTable();
         btnEditar = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
         btnFechar = new javax.swing.JButton();
@@ -58,7 +90,7 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
 
         pnlResultado2.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultado"));
 
-        tblResultado.setModel(new javax.swing.table.DefaultTableModel(
+        tblResultadoAveriguacao.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -69,7 +101,7 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(tblResultado);
+        jScrollPane1.setViewportView(tblResultadoAveriguacao);
 
         btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/pencil113.png"))); // NOI18N
         btnEditar.setText("Editar");
@@ -238,12 +270,6 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -266,8 +292,51 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
     private javax.swing.JLabel lblNome;
     private javax.swing.JPanel pnlFiltro;
     private javax.swing.JPanel pnlResultado2;
-    private javax.swing.JTable tblResultado;
+    private javax.swing.JTable tblResultadoAveriguacao;
     private javax.swing.JFormattedTextField txtMatricula;
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables
+    private class ModeloTabelaResultadoAveriguacao extends AbstractTableModel {
+        @Override
+        public String getColumnName(int coluna) {
+            if (coluna == 0) {
+                return "NIS:";
+            }  else if (coluna == 1) {
+                return "Beneficiario:";
+            } else if (coluna == 2){                
+                return "Situacao:";
+            } else if (coluna == 3){
+                return "Resultado:";
+            }else{
+                return "Decisao:";
+            }
+        }
+
+        @Override
+        public int getRowCount() {
+            return listaResultadoAveriguacao.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return 5;
+        }
+
+        @Override
+        public Object getValueAt(int linha, int coluna) {
+            ResultadoAveriguacao resultadoAveriguacao= listaResultadoAveriguacao.get(linha);
+            if (coluna == 0) {
+                return resultadoAveriguacao.getPedidoAveriguacao().getBeneficiario().getNis();
+            } else if (coluna == 1) {
+                return resultadoAveriguacao.getPedidoAveriguacao().getBeneficiario().getNome();
+            } else if (coluna == 2){ 
+                return resultadoAveriguacao.getPedidoAveriguacao().getSituacao();
+            } else if (coluna == 3){
+                return resultadoAveriguacao.getResultado();
+            }else{
+                return resultadoAveriguacao.getDecisao();
+            }
+        }
+
+    }
 }

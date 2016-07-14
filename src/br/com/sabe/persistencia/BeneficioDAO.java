@@ -19,8 +19,8 @@ import java.util.List;
  * @author wff
  */
 public class BeneficioDAO {
-    private static final String SQL_INSERT = "INSERT INTO BENEFICIO (NOME, TIPO, VALOR) VALUES (?, ?, ?)";
-    private static final String SQL_UPDATE_DADOS = "UPDATE BENEFICIO SET NOME=?, TIPO=?, VALOR=? WHERE ID=?";
+    private static final String SQL_INSERT = "INSERT INTO BENEFICIO (NOME, DESCRISSAO, VALOR) VALUES (?, ?, ?)";
+    private static final String SQL_UPDATE_DADOS = "UPDATE BENEFICIO SET NOME=?, DESCRISSAO=?, VALOR=? WHERE ID=?";
     private static final String SQL_BUSCAR_TODOS = "SELECT*FROM BENEFICIO";
     private static final String SQL_EXCLUIR = "DELETE FROM BENEFICIO WHERE NOME= ? ";
 

@@ -13,7 +13,7 @@ import java.sql.Statement;
 
 public class BancoDadosUtil {
     private static final String DRIVER = "org.hsqldb.jdbcDriver";
-    private static final String URL = "jdbc:hsqldb:file:BD/BD_ASSIS;shutdown=true";
+    private static final String URL = "jdbc:hsqldb:file:BD/BD_SABE;shutdown=true";
     private static final String USUARIO = "root";
     private static final String SENHA = "root";
 

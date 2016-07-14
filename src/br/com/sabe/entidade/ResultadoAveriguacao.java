@@ -13,6 +13,7 @@ public class ResultadoAveriguacao {
     private int id;
     private String resultado;
     private String decisao;
+    private PedidoAveriguacao pedidoAveriguacao;
 
     public int getId() {
         return id;
@@ -24,6 +25,14 @@ public class ResultadoAveriguacao {
 
     public String getResultado() {
         return resultado;
+    }
+
+    public PedidoAveriguacao getPedidoAveriguacao() {
+        return pedidoAveriguacao;
+    }
+
+    public void setPedidoAveriguacao(PedidoAveriguacao pedidoAveriguacao) {
+        this.pedidoAveriguacao = pedidoAveriguacao;
     }
 
     public void setResultado(String resultado) {

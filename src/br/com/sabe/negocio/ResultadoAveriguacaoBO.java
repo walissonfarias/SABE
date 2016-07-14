@@ -5,10 +5,23 @@
  */
 package br.com.sabe.negocio;
 
+import br.com.sabe.entidade.PedidoAveriguacao;
+import br.com.sabe.entidade.ResultadoAveriguacao;
+import br.com.sabe.persistencia.ResultadoAveriguacaoDAO;
+import java.sql.SQLException;
+import java.util.List;
+
 /**
  *
  * @author walisson
  */
 public class ResultadoAveriguacaoBO {
-    
+    public void inserir(PedidoAveriguacao pedidoAveriguacao, ResultadoAveriguacao resultadoAveriguacao) throws SQLException{
+        ResultadoAveriguacaoDAO resultadoAveriguacaoDAO = new ResultadoAveriguacaoDAO();
+        resultadoAveriguacaoDAO.inserir(pedidoAveriguacao, resultadoAveriguacao);
+    }
+    public List<ResultadoAveriguacao> buscarTodos() throws SQLException{
+        ResultadoAveriguacaoDAO resultadoAveriguacaoDAO = new ResultadoAveriguacaoDAO();
+        return resultadoAveriguacaoDAO.buscarTodos();  
+    }
 }

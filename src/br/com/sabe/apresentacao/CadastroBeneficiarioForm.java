@@ -53,7 +53,7 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
         this.beneficios = beneficioBO.buscarTodos();
 
         this.cmbBeneficios.removeAllItems();
-        
+        this.cmbBeneficios.addItem("Selecione");
         for(Beneficio beneficio: beneficios){
             this.cmbBeneficios.addItem(beneficio.getNome());
         }
@@ -64,7 +64,7 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
         int beneficioSelecionado = this.cmbBeneficios.getSelectedIndex();
         if (beneficioSelecionado > 0) {
             for(Beneficio beneficio: beneficios){
-                this.BeneficioAndBeneficiario.setBeneficio(beneficios.get(beneficioSelecionado));
+                this.BeneficioAndBeneficiario.setBeneficio(beneficios.get(beneficioSelecionado-1));
             }
         }else{
             throw new CampoObrigatorioException();     
