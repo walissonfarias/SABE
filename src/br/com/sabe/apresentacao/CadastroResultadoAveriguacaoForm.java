@@ -193,6 +193,11 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
         lblDescrissaoResultado.setText("Descrissão do Resultado:");
 
         cmbDecisaoAveriguacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bloquear recebimento do benefício", "Cadastro de acordo com o informado", " " }));
+        cmbDecisaoAveriguacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbDecisaoAveriguacaoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlResultadoAveriguacaoLayout = new javax.swing.GroupLayout(pnlResultadoAveriguacao);
         pnlResultadoAveriguacao.setLayout(pnlResultadoAveriguacaoLayout);
@@ -315,6 +320,10 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         
     }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void cmbDecisaoAveriguacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDecisaoAveriguacaoActionPerformed
+        
+    }//GEN-LAST:event_cmbDecisaoAveriguacaoActionPerformed
 
     /**
      * @param args the command line arguments

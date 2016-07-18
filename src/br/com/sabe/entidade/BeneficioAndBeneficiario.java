@@ -10,8 +10,8 @@ package br.com.sabe.entidade;
  * @author walisson
  */
 public class BeneficioAndBeneficiario {
-    private Beneficio beneficio;
-    private Beneficiario beneficiario;
+    public Beneficio beneficio;
+    public Beneficiario beneficiario;
 
     public Beneficio getBeneficio() {
         return beneficio;

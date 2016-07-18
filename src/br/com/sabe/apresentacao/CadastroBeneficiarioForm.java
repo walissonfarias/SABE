@@ -27,7 +27,12 @@ import javax.swing.JOptionPane;
 public class CadastroBeneficiarioForm extends javax.swing.JFrame {
     List<Beneficio> beneficios = new ArrayList<>();
     Beneficiario beneficiario;
+    Beneficiario beneficiarioEmEdicao;
     BeneficioAndBeneficiario BeneficioAndBeneficiario;
+    BeneficioAndBeneficiario BeneficioAndBeneficiarioEmEdicao;
+    ConsultaBeneficiarioForm consultaBeneficiarioForm = null;
+    CadastroPedidoAveriguacaoForm cadastroPedidoAveriguacaoForm = null;
+    int acaoTela = 0;
     /**
      * Creates new form CadastroBeneficiarioForm
      */
@@ -36,10 +41,20 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
         BeneficioAndBeneficiario = new BeneficioAndBeneficiario();
         prepararTela();
     }
+    
+    public CadastroBeneficiarioForm(BeneficioAndBeneficiario beneficioAndBeneficiario){
+        acaoTela = 1;
+        this.beneficiario = beneficiario;
+        this.BeneficioAndBeneficiario = beneficioAndBeneficiario;
+        this.prepararTela();
+    }
     public void prepararTela(){
         try {
             this.initComponents();
             this.carregarComboBeneficios();
+            if(acaoTela == 1){
+                this.inicializarCamposTela();
+            }
         } catch (Exception e) {
             String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
             mensagem += "\nMensagem de erro:\n" + e.getMessage();
@@ -51,12 +66,30 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
     public void carregarComboBeneficios() throws SQLException {
         BeneficioBO beneficioBO = new BeneficioBO();
         this.beneficios = beneficioBO.buscarTodos();
-
         this.cmbBeneficios.removeAllItems();
         this.cmbBeneficios.addItem("Selecione");
         for(Beneficio beneficio: beneficios){
             this.cmbBeneficios.addItem(beneficio.getNome());
         }
+    }
+    public void inicializarCamposTela() throws ParseException{
+        this.txtNome.setText(beneficiario.getNome());
+        this.txtNis.setText(beneficiario.getNis());
+        cmbBeneficios.setSelectedItem(BeneficioAndBeneficiario.getBeneficio().getNome());
+        if(beneficiario.getZona().equals("R")){
+            rdoRural.setSelected(true);
+        }else if(beneficiario.getZona().equals("U")){
+            rdoUrbano.setSelected(true);
+        }else{
+            throw new CampoObrigatorioException();     
+        }
+        this.txtBairro.setText(beneficiario.getBairro());
+        this.txtLocalidade.setText(beneficiario.getLocalidade());
+        this.txtRua.setText(beneficiario.getRua());        
+        this.txtNumero.setText(Integer.toString(beneficiario.getNumero()));  
+        this.txtQtdeMembros.setText(Integer.toString(beneficiario.getQtdeMembros()));      
+        this.txtRendaFamiliar.setText(String.valueOf(beneficiario.getRendaFamiliar()));
+        this.txtRendaPerCapta.setText(String.valueOf(beneficiario.getRendaPerCapta()));
     }
     public void recuperarCamposTela() throws ParseException{
         this.beneficiario.setNome(txtNome.getText());
@@ -119,6 +152,19 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
             txtLocalidade.getText().trim().isEmpty())
         {
             throw new CampoObrigatorioException();
+        }
+    }
+     private void cadastrarPedidoAveriguacao() {
+        String mensagem = "Deseja cadastrar um Pedido de Averiguação?";
+        String titulo = "Tela cadastro de beneficiario";
+        int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) {
+            limparCamposTela();
+            if(cadastroPedidoAveriguacaoForm == null){
+                cadastroPedidoAveriguacaoForm = new CadastroPedidoAveriguacaoForm(this, beneficiario);
+            }
+            cadastroPedidoAveriguacaoForm.setVisible(true);
+            this.dispose();
         }
     }
     /**
@@ -495,7 +541,10 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNisActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        
+        if(consultaBeneficiarioForm == null){
+            consultaBeneficiarioForm = new ConsultaBeneficiarioForm();
+        }
+        consultaBeneficiarioForm.setVisible(true);
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     private void txtNomeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNomeFocusLost
@@ -517,7 +566,6 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         try {
             this.recuperarCamposTela();
-
             BeneficiarioBO beneficiarioBO = new BeneficiarioBO();
             beneficiarioBO.inserir(beneficiario, BeneficioAndBeneficiario);
 
@@ -526,6 +574,7 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
                     "Cadastro de beneficiario",
                     JOptionPane.INFORMATION_MESSAGE);
             this.limparCamposTela();
+            this.cadastrarPedidoAveriguacao();
         }catch(SistemaAveriguacaoException sae){
             JOptionPane.showMessageDialog(
                     this,
@@ -633,4 +682,5 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
     private javax.swing.JTextField txtRendaPerCapta;
     private javax.swing.JTextField txtRua;
     // End of variables declaration//GEN-END:variables
+
 }

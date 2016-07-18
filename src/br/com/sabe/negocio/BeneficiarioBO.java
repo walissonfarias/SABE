@@ -49,10 +49,12 @@ public class BeneficiarioBO {
             throw new ArgumentoInvalidoException("NIS inexistente \n Verifique se o NIS está correto");
         }
     }
-    public List<Beneficiario> buscarTodos() throws SQLException{
+    /*public List<Beneficiario> buscarTodos() throws SQLException{
         BeneficiarioDAO beneficiarioDAO = new BeneficiarioDAO();
         return beneficiarioDAO.buscarTodos();
-    }
+        BeneficioAndBeneficiarioDAO beneficioAndBeneficiarioDAO = new BeneficioAndBeneficiarioDAO();
+        beneficioAndBeneficiarioDAO.buscarByBeneficiario();
+    }*/
     public void atualizarDados(Usuario usuario) throws SQLException {
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         usuarioDAO.atualizarDados(usuario);

@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
  */
 public class CadastroBeneficioForm extends javax.swing.JFrame {
     Beneficio beneficio = null;
+    ConsultaBeneficioForm consultaBeneficioForm = null;
     int acao = 0;
     /**
      * Creates new form CadastroBeneficioForm
@@ -248,7 +249,17 @@ public class CadastroBeneficioForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNomeBeneficioActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-       
+        String mensagem = "Os dados ja preenchidos serao descartados";
+        String titulo = "Tela consulta de beneficios";
+        int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) {
+            limparCamposTela();
+            if(consultaBeneficioForm == null){
+                consultaBeneficioForm = new ConsultaBeneficioForm();
+            }
+            consultaBeneficioForm.setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     private void txtTipoBeneficioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTipoBeneficioFocusLost
@@ -260,7 +271,13 @@ public class CadastroBeneficioForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTipoBeneficioActionPerformed
 
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
-        this.dispose();
+        String mensagem = "Os dados ja preenchidos serao descartados";
+        String titulo = "Fechar Tela Cadastro de Usuarios";
+        int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) {
+            limparCamposTela();
+            this.dispose();
+        }
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
@@ -279,14 +296,15 @@ public class CadastroBeneficioForm extends javax.swing.JFrame {
             BeneficioBO beneficioBO = new BeneficioBO();
             this.validarCamposObrigatorios();
             this.recuperarCamposTela();
-            if(acao != 0){
+            if(acao == 0){
+                beneficioBO.inserir(beneficio);
+                JOptionPane.showMessageDialog(this, "Beneficio cadastrado com sucesso!",
+                "Cadastro Beneficio", JOptionPane.INFORMATION_MESSAGE);
+            }else{
                 beneficioBO.alterar(beneficio);       
                 JOptionPane.showMessageDialog(this, "Beneficio alterado com sucesso!",
                 "Editar Beneficio", JOptionPane.INFORMATION_MESSAGE);
-            }
-            beneficioBO.inserir(beneficio);       
-            JOptionPane.showMessageDialog(this, "Beneficio cadastrado com sucesso!",
-                "Cadastro Beneficio", JOptionPane.INFORMATION_MESSAGE);
+            }                   
             this.limparCamposTela();
             //desabilitarBotoesTela();
         }catch(SistemaAveriguacaoException sae){

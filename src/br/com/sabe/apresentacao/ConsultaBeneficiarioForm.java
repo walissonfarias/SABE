@@ -6,12 +6,15 @@
 package br.com.sabe.apresentacao;
 import br.com.sabe.entidade.Beneficiario;
 import br.com.sabe.entidade.Beneficio;
+import br.com.sabe.entidade.BeneficioAndBeneficiario;
 import br.com.sabe.entidade.Usuario;
 import br.com.sabe.negocio.BeneficiarioBO;
+import br.com.sabe.negocio.BeneficioAndBeneficiarioBO;
 import br.com.sabe.negocio.BeneficioBO;
 import br.com.sabe.negocio.UsuarioBO;
 import br.com.sabe.persistencia.UsuarioDAO;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -26,8 +29,11 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
     CadastroBeneficiarioForm cadastroBeneficiario = null;
     List<Beneficiario> beneficiarios = new ArrayList<>();
     List<Beneficio> beneficios = new ArrayList<>();
+    List<BeneficioAndBeneficiario> listaBeneficioAndBeneficiario = new ArrayList<>();
+    BeneficioAndBeneficiario beneficioAndBeneficiario;
     Beneficiario beneficiarioEmEdicao;
     Beneficiario beneficiarioEmExclusao;
+    Beneficio beneficio = null;
     /**
      * Creates new form ConsultarBeneficiario
      */
@@ -56,11 +62,18 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
             this.cmbBeneficios.addItem(beneficio.getNome());
         }
     }
-    public void carregarTabelaBeneficiarios() throws SQLException{
+    /*public void carregarTabelaBeneficiarios() throws SQLException{
         BeneficiarioBO beneficiarioBO = new BeneficiarioBO();
         this.beneficiarios = beneficiarioBO.buscarTodos();
 
         ModeloTabelaAluno modelo = new ModeloTabelaAluno();
+        tblBeneficiarios.setModel(modelo);
+    }*/
+    public void carregarTabelaBeneficiarios() throws SQLException{
+        BeneficioAndBeneficiarioBO beneficioAndBeneficiarioBO = new BeneficioAndBeneficiarioBO();
+        this.listaBeneficioAndBeneficiario = 
+            beneficioAndBeneficiarioBO.buscarTodosBeneficioAndBeneficiario();
+        ModeloTabelaBeneficiarios modelo = new ModeloTabelaBeneficiarios();
         tblBeneficiarios.setModel(modelo);
     }
 
@@ -122,8 +135,9 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblBeneficiarios.setColumnSelectionAllowed(true);
+        tblBeneficiarios.setCellSelectionEnabled(false);
         tblBeneficiarios.setName(""); // NOI18N
+        tblBeneficiarios.setRowSelectionAllowed(true);
         tblBeneficiarios.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblBeneficiarios);
         tblBeneficiarios.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -134,6 +148,11 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
 
         btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/pencil113.png"))); // NOI18N
         btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
         btnNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/text133.png"))); // NOI18N
         btnNovo.setText("Novo");
@@ -279,6 +298,22 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
         cadastroBeneficiario.setVisible(true);
     }//GEN-LAST:event_btnNovoActionPerformed
 
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        int linhaSelecionada = tblBeneficiarios.getSelectedRow();
+
+        try {
+            BeneficioAndBeneficiario beneficiarioSelecionado = listaBeneficioAndBeneficiario.get(linhaSelecionada);
+            CadastroBeneficiarioForm telaCadastro = new CadastroBeneficiarioForm(beneficiarioSelecionado);
+            telaCadastro.setVisible(true);           
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Selecione uma linha da tabela para poder editar alguma venda.",
+                    "Alteração de venda",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEditarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -330,7 +365,7 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField txtMatricula;
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables
-    private class ModeloTabelaAluno extends AbstractTableModel {
+    private class ModeloTabelaBeneficiarios extends AbstractTableModel {
 
         @Override
         public String getColumnName(int coluna) {
@@ -339,10 +374,12 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
             }  else if (coluna == 1) {
                 return "Nome";
             } else if (coluna == 2){                
+                return "Beneficio";
+            }else if (coluna == 3){                
                 return "Zona";
-            } else if (coluna == 3){
-                return "Quantidade de Membros";
             }else if (coluna == 4){
+                return "Quantidade de Membros";
+            }else if (coluna == 5){
                 return "Renda Familiar";
             }else {
                 return "Renda Per Capta";
@@ -351,33 +388,38 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
 
         @Override
         public int getRowCount() {
-            return beneficiarios.size();
+            return listaBeneficioAndBeneficiario.size();
         }
 
         @Override
         public int getColumnCount() {
-            return 6;
+            return 7;
         }
 
         @Override
         public Object getValueAt(int linha, int coluna) {
-            Beneficiario beneficiario = beneficiarios.get(linha);
+            BeneficioAndBeneficiario beneficioAndBeneficiario = 
+                listaBeneficioAndBeneficiario.get(linha);
             if (coluna == 0) {
-                return beneficiario.getNis();
+                return beneficioAndBeneficiario.getBeneficiario().getNis();
             } else if (coluna == 1) {
-                return beneficiario.getNome();
+                return beneficioAndBeneficiario.getBeneficiario().getNome();
             } else if (coluna == 2){ 
-                if(beneficiario.getZona().equals("U")){
+                return beneficioAndBeneficiario.getBeneficio().getNome();
+            } else if (coluna == 3){
+                if(beneficioAndBeneficiario.getBeneficiario().getZona().equals("U")){
                     return "Urbana";
                 }else{
                     return "Rural";
-                }
-            } else if (coluna == 3){
-                return beneficiario.getQtdeMembros();
+                }                 
             }else if (coluna == 4){
-                return beneficiario.getRendaFamiliar();
+                return beneficioAndBeneficiario.getBeneficiario().getQtdeMembros();
+            }else if (coluna == 5){
+                DecimalFormat formatador = new DecimalFormat("#,##0.00");
+                return formatador.format(beneficioAndBeneficiario.getBeneficiario().getRendaFamiliar());
             }else {
-                return beneficiario.getRendaPerCapta();
+                DecimalFormat formatador = new DecimalFormat("#,##0.00");
+                return formatador.format(beneficioAndBeneficiario.getBeneficiario().getRendaPerCapta());
             }
             
         }

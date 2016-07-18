@@ -21,9 +21,13 @@ import java.util.List;
  */
 public class BeneficiarioDAO {
     private static final String SQL_INSERT = "INSERT INTO BENEFICIARIO ( NIS, NOME, RUA, NUMERO, BAIRRO, ZONA, LOCALIDADE, "
-            + "QTDE_MEMBROS_DA_FAMILIA, RENDA_FAMILIAR, RENDA_PER_CAPTA )VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+            + "QTDE_MEMBROS, RENDA_FAMILIAR, RENDA_PER_CAPTA )VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
     private static final String SQL_BUSCAR_BY_NIS = "SELECT*FROM BENEFICIARIO WHERE NIS=?";
-    private static final String SQL_BUSCAR_BENEFICIARIO_BY_BENEFICIO = "SELECT*FROM BENEFICIARIO WHERE ID_BENEFICIO=?";
+    private static final String SQL_BUSCAR_BENEFICIARIO_BY_BENEFICIO = "SELECT BRIO.ID, BRIO.NIS, BRIO.RUA, BRIO.NUMERO, BRIO.BAIRRO, BRIO.ZONA,\n"
+            + "BRIO.LOCALIDADE, BRIO.QTDE_MEMBROS, BRIO.RENDA_FAMILIAR, \n"
+            + "BRIO.RENDA_PER_CAPTA, B.NOME, B.DESCRISSAO, B.VALOR FROM BENEFICIARIO BRIO \n"
+            + "JOIN BENEFICIO_BENEFICIARIO BB ON BRIO.ID = BB.ID_BENEFICIARIO \n"
+            + "JOIN BENEFICIO B ON BB.ID_BENEFICIO=B.ID;";
     private static final String SQL_BUSCAR_TODOS = "SELECT*FROM BENEFICIARIO";
     private static final String SQL_EXCLUIR = "DELETE FROM BENEFICIO WHERE NOME= ? "; 
     
@@ -65,30 +69,6 @@ public class BeneficiarioDAO {
             conexao = BancoDadosUtil.getConnection();
             comando = conexao.prepareStatement(SQL_BUSCAR_BY_NIS);
             comando.setString(1, nis);
-            resultado = comando.executeQuery();
-            
-            while(resultado.next()){
-                beneficiario = this.extrairLinhaResultado(resultado);
-            }    
-        }catch(Exception e){
-            if(conexao!= null){
-                conexao.rollback();
-            }
-            throw new RuntimeException();
-        }finally{
-            BancoDadosUtil.fecharChamadasBancoDados(conexao, comando, resultado);
-        }
-        return beneficiario;
-    }
-    public Beneficiario buscarBeneficiarioByBeneficio(Beneficio beneficio) throws SQLException{
-        Beneficiario beneficiario = null;
-        Connection conexao = null;
-        PreparedStatement comando = null;
-        ResultSet resultado = null;
-        try{
-            conexao = BancoDadosUtil.getConnection();
-            comando = conexao.prepareStatement(SQL_BUSCAR_BENEFICIARIO_BY_BENEFICIO);
-            comando.setInt(1, beneficio.getId());
             resultado = comando.executeQuery();
             
             while(resultado.next()){
@@ -148,4 +128,5 @@ public class BeneficiarioDAO {
         beneficiario.setRendaPerCapta(resultado.getDouble(11));
         return beneficiario;
     }
+
 }

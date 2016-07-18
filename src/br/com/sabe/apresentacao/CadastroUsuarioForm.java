@@ -440,7 +440,14 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
-        this.dispose();
+        String mensagem = "Deseja fechar a tela de cadastros de usuarios?"
+                + "Os dados ja preenchidos serao descartados!";
+        String titulo = "Fechar Tela Cadastro de Usuarios";
+        int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) {
+            limparCamposTela();
+            this.dispose();
+        }  
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void txtNomeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNomeFocusLost
