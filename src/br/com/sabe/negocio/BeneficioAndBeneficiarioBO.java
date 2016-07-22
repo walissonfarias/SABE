@@ -26,4 +26,18 @@ public class BeneficioAndBeneficiarioBO {
         BeneficioAndBeneficiarioDAO beneficioAndBeneficiarioDAO = new BeneficioAndBeneficiarioDAO();
         return beneficioAndBeneficiarioDAO.buscarBeneficiarioByBeneficio();       
     }
+    public void excluirBeneficioAndBeneficiario(){
+        
+    }
+    public void excluirBeneficio(){
+        BeneficioAndBeneficiarioDAO beneficioAndBeneficiarioDAO = new BeneficioAndBeneficiarioDAO();
+        beneficioAndBeneficiarioDAO.excluirBeneficio();
+        this.excluirBeneficiario(){
+        
+        }
+    }   
+    public void excluirBeneficiario(){
+        BeneficioAndBeneficiarioDAO beneficioAndBeneficiarioDAO = new BeneficioAndBeneficiarioDAO();
+        beneficioAndBeneficiarioDAO.excluirBeneficario(){
+    }
 }

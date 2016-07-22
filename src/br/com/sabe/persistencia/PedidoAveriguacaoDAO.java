@@ -19,17 +19,42 @@ import java.util.List;
  * @author walisson
  */
 public class PedidoAveriguacaoDAO {
-    private static final String SQL_INSERT = "INSERT INTO PEDIDO(SITUACAO, ID_BENEFICIARIO)VALUES(?,?)";
+    private static final String SQL_INSERT = "INSERT INTO PEDIDO(DATA_PEDIDO, SITUACAO, ID_BENEFICIARIO)VALUES(?, ?,?)";
     private static final String SQL_BUSCAR_TODOS = "SELECT*FROM BENEFICIARIO B JOIN PEDIDO P ON B.ID=P.ID_BENEFICIARIO"; 
-    public void inserir(PedidoAveriguacao pedidoAveriguacao, Beneficiario beneficiario) throws SQLException{
+    public void inserir(PedidoAveriguacao pedidoAveriguacao) throws SQLException{
         Connection conexao = null;
         PreparedStatement comando = null;
         
         try{
             conexao = BancoDadosUtil.getConnection();
             comando = conexao.prepareStatement(SQL_INSERT);
-            comando.setString(1, pedidoAveriguacao.getSituacao());
-            comando.setInt(2, pedidoAveriguacao.beneficiario.getId());
+            java.sql.Date dataSql = new java.sql.Date(pedidoAveriguacao.getDataPedido().getTime());
+            comando.setDate(1, dataSql);
+            comando.setString(2, pedidoAveriguacao.getDescricao());
+            comando.setInt(3, pedidoAveriguacao.beneficiario.getId());
+            comando.execute();
+            conexao.commit();
+        }catch(Exception e){
+            if(conexao!= null){
+                conexao.rollback();
+            }
+            throw e;
+        }finally{
+            BancoDadosUtil.fecharChamadasBancoDados(conexao, comando);
+        }
+        
+    }
+    public void atualizar(PedidoAveriguacao pedidoAveriguacao) throws SQLException{
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        
+        try{
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_INSERT);
+            java.sql.Date dataSql = new java.sql.Date(pedidoAveriguacao.getDataPedido().getTime());
+            comando.setDate(1, dataSql);
+            comando.setString(2, pedidoAveriguacao.getDescricao());
+            comando.setInt(3, pedidoAveriguacao.beneficiario.getId());
             comando.execute();
             conexao.commit();
         }catch(Exception e){
@@ -74,7 +99,7 @@ public class PedidoAveriguacaoDAO {
         //(Note que no BD o index inicia por 1)
         PedidoAveriguacao pedidoAveriguacao = new PedidoAveriguacao(); 
         pedidoAveriguacao.setId(resultado.getInt(1));
-        pedidoAveriguacao.setSituacao(resultado.getString(2));
+        pedidoAveriguacao.setDescricao(resultado.getString(2));
         pedidoAveriguacao.beneficiario.setId(resultado.getInt(3));
         pedidoAveriguacao.beneficiario.setNis(resultado.getString(4));
         pedidoAveriguacao.beneficiario.setNome(resultado.getString(5));

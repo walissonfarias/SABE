@@ -5,12 +5,15 @@
  */
 package br.com.sabe.entidade;
 
+import java.util.Date;
+
 /**
  *
  * @author walisson
  */
 public class ResultadoAveriguacao {
     private int id;
+    private Date dataResultado;
     private String resultado;
     private String decisao;
     private PedidoAveriguacao pedidoAveriguacao;
@@ -21,6 +24,14 @@ public class ResultadoAveriguacao {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Date getDataResultado() {
+        return dataResultado;
+    }
+
+    public void setDataResultado(Date dataResultado) {
+        this.dataResultado = dataResultado;
     }
 
     public String getResultado() {

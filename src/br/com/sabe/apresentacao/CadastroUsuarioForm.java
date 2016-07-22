@@ -31,28 +31,27 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
     Usuario usuarioEmEdicao;
     Usuario usuarioPesquisado;
     ConsultarUsuarioForm telaListarUsuario;
-    int usuarioAcao;
+    int acaoTela;
     /**
      * Creates new form TelaLogin
      */
     public CadastroUsuarioForm() {
         prepararTela();
-        this.desabilitarBotoesTela();
         usuario = new Usuario();
-        usuarioAcao = 0;
+        acaoTela = 0;
     }
-    public CadastroUsuarioForm(ConsultarUsuarioForm telaListarUsuario, Usuario usuario){
+    public CadastroUsuarioForm(Usuario usuarioConsultado){
         prepararTela();
-        this.usuarioEmEdicao = usuario;
-        this.telaListarUsuario = telaListarUsuario;
+        this.usuario = usuarioConsultado;
         this.inicializarCamposTela();
         this.habilitarBotoesTela();
-        this.usuarioAcao = 1;
+        this.acaoTela = 1;
     }
 
     private void prepararTela() {
         try {
             this.initComponents();
+            this.desabilitarBotoesTela();
         } catch (Exception e) {
             String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
             mensagem += "\nMensagem de erro:\n" + e.getMessage();
@@ -61,7 +60,12 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
         }
 
     }
-    private void desabilitarBotoesTela(){
+    private void desabilitarBotoesTela() throws SQLException{
+        UsuarioBO usuarioBO = new UsuarioBO();
+        boolean gestorExistente = usuarioBO.verificarGestorExistente();
+        if(gestorExistente == true){
+            chbGestor.setEnabled(false);
+        }
         btnNovo.setEnabled(false);
         btnSalvar.setEnabled(false);
     }
@@ -87,6 +91,7 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
         txtNome.setText("");
         txtLogin.setText("");
         txtSenha.setText("");
+        txtRepitaSenha.setText("");
         btnGrupoUsuarios.clearSelection();
     }
     private void recuperarCamposTela() throws NoSuchAlgorithmException, UnsupportedEncodingException {
@@ -101,33 +106,35 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
                throw new SenhaInvalidaException("As senhas são diferentes. \n Elas devem ser iguais");
         }
         
-        if (chbAssistenteSocial.isSelected()) {
-            usuario.setCargo("AS");
-        }else if (chbGestor.isSelected()){
+        if (chbGestor.isSelected() == true){
             usuario.setCargo("G");
-        }else if (chbOrientadorSocial.isSelected()) {
+        }else if(chbAssistenteSocial.isSelected() == true) {
+            usuario.setCargo("AS");
+        }else if (chbOrientadorSocial.isSelected() == true) {
             usuario.setCargo("OS");
-        }else if (chbRecepcionista.isSelected()){
+        }else if (chbRecepcionista.isSelected() == true){
             usuario.setCargo("R");
         }else{
             throw new CampoObrigatorioException();
         }
     }
     public void inicializarCamposTela(){
-        txtNome.setText(usuarioEmEdicao.getNome());
-        txtLogin.setText(usuarioEmEdicao.getLogin());
-        txtSenha.setText(usuarioEmEdicao.getSenha());
-        if(usuarioEmEdicao.getCargo().equals("AS")) {
-            chbAssistenteSocial.setSelected(true);
-        }
-        if(usuarioEmEdicao.getCargo().equals("G")) {
-            chbGestor.setSelected(true);
-        }
-        if(usuarioEmEdicao.getCargo().equals("OS")) {
-            chbOrientadorSocial.setSelected(true);
-        }
-        if (usuarioEmEdicao.getCargo().equals("R")){
-            chbRecepcionista.setSelected(true);            
+        txtNome.setText(usuario.getNome());
+        txtLogin.setText(usuario.getLogin());
+        switch (usuario.getCargo()) {
+            case "AS":
+                chbAssistenteSocial.setSelected(true);
+                break;
+            case "G":
+                chbGestor.setEnabled(true);
+                chbGestor.setSelected(true);
+                break;
+            case "OS":            
+                chbOrientadorSocial.setSelected(true);
+                break;
+            default:
+                chbRecepcionista.setSelected(true);
+                break;
         }
     }
     /**
@@ -155,7 +162,7 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
         btnFechar = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
         btnSalvar = new javax.swing.JButton();
-        btnListarUsuario = new javax.swing.JButton();
+        btnPesquisar = new javax.swing.JButton();
         txtSenha = new javax.swing.JPasswordField();
         lblRepitaSenha = new javax.swing.JLabel();
         txtRepitaSenha = new javax.swing.JPasswordField();
@@ -174,11 +181,6 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
         txtLogin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtLoginFocusLost(evt);
-            }
-        });
-        txtLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLoginActionPerformed(evt);
             }
         });
 
@@ -256,11 +258,6 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
                 txtNomeFocusLost(evt);
             }
         });
-        txtNome.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNomeActionPerformed(evt);
-            }
-        });
 
         btnFechar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/cross79.png"))); // NOI18N
         btnFechar.setText("Fechar");
@@ -289,27 +286,15 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
             }
         });
 
-        btnListarUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/1467304636_search.png"))); // NOI18N
-        btnListarUsuario.setText("Pesquisar");
-        btnListarUsuario.addActionListener(new java.awt.event.ActionListener() {
+        btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/1467304636_search.png"))); // NOI18N
+        btnPesquisar.setText("Pesquisar");
+        btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnListarUsuarioActionPerformed(evt);
-            }
-        });
-
-        txtSenha.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSenhaActionPerformed(evt);
+                btnPesquisarActionPerformed(evt);
             }
         });
 
         lblRepitaSenha.setText("*Repita a Senha:");
-
-        txtRepitaSenha.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtRepitaSenhaActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -318,14 +303,6 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnListarUsuario))
                     .addComponent(pnlGrupoUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(lblCamposObrigatorios)
@@ -347,7 +324,15 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(lblRepitaSenha)
                                 .addGap(1, 1, 1)
-                                .addComponent(txtRepitaSenha)))
+                                .addComponent(txtRepitaSenha))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnPesquisar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
@@ -372,13 +357,18 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pnlGrupoUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblCamposObrigatorios)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnListarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblCamposObrigatorios)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
 
@@ -395,7 +385,8 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jPanel1.getAccessibleContext().setAccessibleName("");
@@ -419,11 +410,10 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
             UsuarioBO usuarioBO = new UsuarioBO();
             this.validarCamposObrigatorios();
             this.recuperarCamposTela();
-            if(this.usuarioAcao == 0){
+            if(this.acaoTela == 0){
                 usuarioBO.criar(usuario);
                 JOptionPane.showMessageDialog(this, "Usuario cadastrado com sucesso!", "Cadastro de usuario", JOptionPane.INFORMATION_MESSAGE);
-            }
-            if(this.usuarioAcao == 1){    
+            }else{    
                 usuarioBO.atualizarDados(usuario);           
                 JOptionPane.showMessageDialog(this, "Cadasdatra atualizado com sucesso!", "Editar de usuario", JOptionPane.INFORMATION_MESSAGE);
             } 
@@ -474,7 +464,7 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
         habilitarBotoesTela();
     }//GEN-LAST:event_chbOrientadorSocialFocusLost
 
-    private void btnListarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarUsuarioActionPerformed
+    private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
         String mensagem = "Os dados ja preenchidos serao descartados";
         String titulo = "Listar Usuarios Cadastrados";
         int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
@@ -486,51 +476,7 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
             telaListarUsuario.setVisible(true);
             this.dispose();
         }   
-    }//GEN-LAST:event_btnListarUsuarioActionPerformed
-
-    private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
-        
-    }//GEN-LAST:event_txtNomeActionPerformed
-
-    private void txtLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLoginActionPerformed
-        javax.swing.JTextField tfCodigo;
-        try{
-
-            javax.swing.text.MaskFormatter
-            format_textField = new javax.swing.text.MaskFormatter("********");
-
-            format_textField.setValidCharacters
-            ("AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789");
-
-            tfCodigo = new javax.swing.JFormattedTextField(format_textField);
-
-        }catch (Exception e){
-            String mensagem = null;
-                mensagem += "\nMensagem de erro:\n" + e.getMessage();
-            JOptionPane.showMessageDialog(this, mensagem, "O Login so pode ter 8 caracteres de A-Z, a-z, 0-9 ", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_txtLoginActionPerformed
-
-    private void txtSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSenhaActionPerformed
-        javax.swing.JTextField tfCodigo;
-        try{
-
-            javax.swing.text.MaskFormatter
-            format_textField = new javax.swing.text.MaskFormatter("********");
-
-            format_textField.setValidCharacters
-            ("AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789");
-
-            tfCodigo = new javax.swing.JFormattedTextField(format_textField);
-
-        }catch (Exception e){
-        
-        }
-    }//GEN-LAST:event_txtSenhaActionPerformed
-
-    private void txtRepitaSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRepitaSenhaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtRepitaSenhaActionPerformed
+    }//GEN-LAST:event_btnPesquisarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -569,8 +515,8 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFechar;
     private javax.swing.ButtonGroup btnGrupoUsuarios;
-    private javax.swing.JButton btnListarUsuario;
     private javax.swing.JButton btnNovo;
+    private javax.swing.JButton btnPesquisar;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JCheckBox chbAssistenteSocial;
     private javax.swing.JCheckBox chbGestor;

@@ -16,9 +16,13 @@ import java.util.List;
  * @author walisson
  */
 public class ResultadoAveriguacaoBO {
-    public void inserir(PedidoAveriguacao pedidoAveriguacao, ResultadoAveriguacao resultadoAveriguacao) throws SQLException{
+    public void inserir(ResultadoAveriguacao resultadoAveriguacao) throws SQLException{
         ResultadoAveriguacaoDAO resultadoAveriguacaoDAO = new ResultadoAveriguacaoDAO();
-        resultadoAveriguacaoDAO.inserir(pedidoAveriguacao, resultadoAveriguacao);
+        resultadoAveriguacaoDAO.inserir(resultadoAveriguacao);
+    }
+    public void atualizar(ResultadoAveriguacao resultadoAveriguacao) throws SQLException{
+        ResultadoAveriguacaoDAO resultadoAveriguacaoDAO = new ResultadoAveriguacaoDAO();
+        resultadoAveriguacaoDAO.atualizar(resultadoAveriguacao);
     }
     public List<ResultadoAveriguacao> buscarTodos() throws SQLException{
         ResultadoAveriguacaoDAO resultadoAveriguacaoDAO = new ResultadoAveriguacaoDAO();

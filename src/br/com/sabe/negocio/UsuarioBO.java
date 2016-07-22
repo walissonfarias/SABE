@@ -7,6 +7,7 @@ package br.com.sabe.negocio;
 
 import br.com.sabe.entidade.Usuario;
 import br.com.sabe.excecao.ArgumentoInvalidoException;
+import br.com.sabe.excecao.GerenteExistenteException;
 import br.com.sabe.excecao.UsuarioLoginExistenteException;
 import br.com.sabe.persistencia.UsuarioDAO;
 import java.sql.SQLException;
@@ -20,7 +21,7 @@ import java.util.List;
 public class UsuarioBO {
     public void criar(Usuario usuario) throws SQLException{
         UsuarioDAO usuarioDAO = new UsuarioDAO();
-        verificarUsuarioLogin(usuario.getLogin());
+        verificarLogin(usuario.getLogin());
         usuarioDAO.criar(usuario);
     }
     public Usuario buscarLoginAndSenha(String login, String senha) throws SQLException{
@@ -34,13 +35,18 @@ public class UsuarioBO {
                     + "Tente novamento efetuar o login.");
         }
     }
-    public void verificarUsuarioLogin(String login) throws SQLException{
+    public void verificarLogin(String login) throws SQLException{
         Usuario usuarioExistente = null;
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         usuarioExistente = usuarioDAO.buscarByLogin(login);
         if(usuarioExistente != null){
             throw new UsuarioLoginExistenteException("Login ja existe!\n escolha outro login!");
         }
+    }
+    public boolean verificarGestorExistente() throws SQLException{
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        return usuarioDAO.buscarGerente();
+            
     }
     public void alterarSenha(Usuario usuario) throws SQLException{
         UsuarioDAO usuarioDAO = new UsuarioDAO();

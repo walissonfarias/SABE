@@ -21,6 +21,7 @@ public class UsuarioDAO {
     private static final String SQL_INSERT = "INSERT INTO USUARIO (NOME, LOGIN, SENHA, CARGO) VALUES (?, ?, ?, ?)";
     private static final String SQL_BUSCAR_USUARIO_SENHA = "SELECT NOME, LOGIN, SENHA, CARGO FROM USUARIO WHERE LOGIN = ? AND SENHA =?";
     private static final String SQL_BUSCAR_BY_LOGIN = "SELECT NOME, LOGIN, SENHA, CARGO FROM USUARIO WHERE  LOGIN = ? ";
+    private static final String SQL_BUSCAR_GERENTE = "SELECT*FROM USUARIO WHERE CARGO=?";
     private static final String SQL_BUSCAR_TODOS = "SELECT  NOME, LOGIN, SENHA, CARGO  FROM USUARIO";
     private static final String SQL_UPDATE_DADOS = "UPDATE USUARIO SET NOME = ?, SENHA= ?, CARGO=? WHERE LOGIN = ? ";
     private static final String SQL_EXCLUIR_POR_LOGIN = "DELETE FROM USUARIO WHERE LOGIN = ? ";
@@ -97,6 +98,25 @@ public class UsuarioDAO {
             BancoDadosUtil.fecharChamadasBancoDados(conexao, comando, resultado);
         }
         return usuario;
+    }
+    public Boolean buscarGerente() throws SQLException{  
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+        Usuario usuario = null;
+        try{
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_BUSCAR_GERENTE);
+            comando.setString(1, "G");
+            resultado = comando.executeQuery();
+            
+            while(resultado.next()){
+                usuario = this.extrairLinhaResultado(resultado);
+            }    
+            return usuario != null;   
+        }finally{
+            BancoDadosUtil.fecharChamadasBancoDados(conexao, comando, resultado);
+        } 
     }
     public Usuario buscarByNome(String nome) throws SQLException{
         Usuario usuario = null;

@@ -161,7 +161,7 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
         if (resposta == JOptionPane.YES_OPTION) {
             limparCamposTela();
             if(cadastroPedidoAveriguacaoForm == null){
-                cadastroPedidoAveriguacaoForm = new CadastroPedidoAveriguacaoForm(this, beneficiario);
+                cadastroPedidoAveriguacaoForm = new CadastroPedidoAveriguacaoForm(beneficiario);
             }
             cadastroPedidoAveriguacaoForm.setVisible(true);
             this.dispose();
@@ -541,10 +541,18 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNisActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        if(consultaBeneficiarioForm == null){
+        String mensagem = "Os dados ja preenchidos serao descartados";
+        String titulo = "Pesquisar Pedidos de Averiguações Cadastrados";
+        int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) {
+            limparCamposTela();
+            if(consultaBeneficiarioForm == null){
             consultaBeneficiarioForm = new ConsultaBeneficiarioForm();
-        }
-        consultaBeneficiarioForm.setVisible(true);
+            }
+            consultaBeneficiarioForm.setVisible(true);
+            this.dispose();
+        }  
+        
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     private void txtNomeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNomeFocusLost
@@ -556,11 +564,24 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNomeActionPerformed
 
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
-        this.dispose();
+        String mensagem = "Deseja fechar a tela de Cadastro de Beneficiario?"
+                + "Os dados ja preenchidos serao descartados!";
+        String titulo = "Fechar Tela Cadastro de Beneficiario";
+        int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) {
+            limparCamposTela();
+            this.dispose();
+        } 
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        
+        int resposta;
+        String mensagem = "Os dados ja preenchidos serao descartados";
+        String titulo = "Cadastrar Novo";
+        resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) {
+            limparCamposTela();
+        }
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed

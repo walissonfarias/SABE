@@ -39,6 +39,16 @@ public class BeneficiarioBO {
             throw new UsuarioLoginExistenteException("Login ja existe!\n escolha outro login!");
         }
     }
+    public Beneficiario buscarByNis(String nis)throws SQLException{
+        BeneficiarioDAO beneficiarioDAO = new BeneficiarioDAO();
+        Beneficiario beneficiarioExistente = null;
+        beneficiarioExistente = beneficiarioDAO.buscarByNis(nis);
+        if(beneficiarioExistente != null){
+            return beneficiarioExistente;
+        }else{
+            throw new ArgumentoInvalidoException("NIS inexistente \n Verifique se o NIS está correto");
+        }
+    }    
     public Beneficiario buscarBeneficiario(Beneficiario beneficiario) throws SQLException{
         Beneficiario beneficiarioExistente = new Beneficiario();
         BeneficiarioDAO beneficiarioDAO = new BeneficiarioDAO();

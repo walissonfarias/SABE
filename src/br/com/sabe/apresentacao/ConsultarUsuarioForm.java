@@ -22,9 +22,9 @@ import javax.swing.table.AbstractTableModel;
  */
 public class ConsultarUsuarioForm extends javax.swing.JFrame {
     Usuario usuario;
-    Usuario usuarioEmEdicao;
+    CadastroUsuarioForm telaCadastroUsuario = null;
     List<Usuario> usuarios = new ArrayList<>();
-    CadastroUsuarioForm telaUsuarios = null;
+    
     /**
      * Creates new form TelaPesquisaUsuario
      */
@@ -177,14 +177,15 @@ public class ConsultarUsuarioForm extends javax.swing.JFrame {
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         int linhaSelecionada = tblResultado.getSelectedRow();
         try {
-            this.usuarioEmEdicao = usuarios.get(linhaSelecionada);
+            Usuario usuarioSelecionado = usuarios.get(linhaSelecionada);
             UsuarioBO usuarioBO = new UsuarioBO();               
             String mensagem = "Deseja excluir usuario?";
             String titulo = "Excluir Usuario";
             int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
             if (resposta == JOptionPane.YES_OPTION) {
-                usuarioBO.excluirUsuario(this.usuarioEmEdicao);   
-                JOptionPane.showMessageDialog(this, "Usuario excluido com sucesso!", "Excluir Usuario", JOptionPane.INFORMATION_MESSAGE);
+                usuarioBO.excluirUsuario(usuarioSelecionado);   
+                JOptionPane.showMessageDialog(this, "Usuario excluido com sucesso!", "Excluir Usuario",
+                    JOptionPane.INFORMATION_MESSAGE);
                 carregarTabelaUsuarios();
             }
         } catch (SQLException ex) {
@@ -201,11 +202,10 @@ public class ConsultarUsuarioForm extends javax.swing.JFrame {
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         int linhaSelecionada = tblResultado.getSelectedRow();
         try{
-            this.usuarioEmEdicao = usuarios.get(linhaSelecionada);
-            if(telaUsuarios == null){
-                telaUsuarios = new CadastroUsuarioForm(this, usuarioEmEdicao);
-            }
-            telaUsuarios.setVisible(true);
+            Usuario usuarioSelecionado = usuarios.get(linhaSelecionada);
+            CadastroUsuarioForm telaCadastro = new CadastroUsuarioForm(usuarioSelecionado);
+            telaCadastro.setVisible(true);
+            this.dispose();
         }catch (ArrayIndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(
                     this,
@@ -220,10 +220,10 @@ public class ConsultarUsuarioForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        if(telaUsuarios == null){
-            telaUsuarios = new CadastroUsuarioForm();
+        if(telaCadastroUsuario == null){
+            telaCadastroUsuario = new CadastroUsuarioForm();
         }    
-        telaUsuarios.setVisible(true);
+        telaCadastroUsuario.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnNovoActionPerformed
 

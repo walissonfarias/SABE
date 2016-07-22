@@ -355,7 +355,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jInternalFrame1" max="32767" attributes="0"/>
+              <Component id="jIntFrameTelaLogin" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -364,14 +364,14 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jInternalFrame1" max="32767" attributes="0"/>
+              <Component id="jIntFrameTelaLogin" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JInternalFrame" name="jInternalFrame1">
+    <Container class="javax.swing.JInternalFrame" name="jIntFrameTelaLogin">
       <Properties>
         <Property name="title" type="java.lang.String" value="Tela de Login"/>
         <Property name="visible" type="boolean" value="true"/>

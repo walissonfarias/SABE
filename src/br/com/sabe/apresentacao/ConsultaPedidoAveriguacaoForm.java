@@ -345,7 +345,7 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
             } else if (coluna == 2){ 
                 return pedidoAveriguacao.beneficiario.getLocalidade();
             } else if (coluna == 3){
-                return pedidoAveriguacao.getSituacao();
+                return pedidoAveriguacao.getDescricao();
             }else{
                 return pedidoAveriguacao.beneficiario.getQtdeMembros();
             }

@@ -17,10 +17,14 @@ import java.util.List;
  * @author walisson
  */
 public class PedidoAveriguacaoBO {
-    public void inserir(PedidoAveriguacao pedidoAveriguacao, Beneficiario beneficiario) throws SQLException{
+    public void inserir(PedidoAveriguacao pedidoAveriguacao) throws SQLException{
         PedidoAveriguacaoDAO PedidoAveriguacaoDAO = new PedidoAveriguacaoDAO();
-        PedidoAveriguacaoDAO.inserir(pedidoAveriguacao, beneficiario);
-    }    
+        PedidoAveriguacaoDAO.inserir(pedidoAveriguacao);
+    }  
+    public void atualizar(PedidoAveriguacao pedidoAveriguacao) throws SQLException{
+        PedidoAveriguacaoDAO PedidoAveriguacaoDAO = new PedidoAveriguacaoDAO();
+        PedidoAveriguacaoDAO.atualizar(pedidoAveriguacao);
+    } 
     public List<PedidoAveriguacao> buscarTodos() throws SQLException{
         PedidoAveriguacaoDAO pedidoAveriguacaoDAO = new PedidoAveriguacaoDAO();
         return pedidoAveriguacaoDAO.buscarTodos();  

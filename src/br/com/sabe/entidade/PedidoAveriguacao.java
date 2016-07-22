@@ -5,13 +5,16 @@
  */
 package br.com.sabe.entidade;
 
+import java.util.Date;
+
 /**
  *
  * @author walisson
  */
 public class PedidoAveriguacao {
     private int id;
-    private String situacao;
+    private String descricao;
+    private Date dataPedido;
     public Beneficiario beneficiario;
 
     public int getId() {
@@ -22,13 +25,23 @@ public class PedidoAveriguacao {
         this.id = id;
     }
 
-    public String getSituacao() {
-        return situacao;
+    public Date getDataPedido() {
+        return dataPedido;
     }
 
-    public void setSituacao(String situacao) {
-        this.situacao = situacao;
+    public void setDataPedido(Date dataPedido) {
+        this.dataPedido = dataPedido;
     }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    
 
     public Beneficiario getBeneficiario() {
         return beneficiario;

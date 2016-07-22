@@ -330,7 +330,7 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
             } else if (coluna == 1) {
                 return resultadoAveriguacao.getPedidoAveriguacao().getBeneficiario().getNome();
             } else if (coluna == 2){ 
-                return resultadoAveriguacao.getPedidoAveriguacao().getSituacao();
+                return resultadoAveriguacao.getPedidoAveriguacao().getDescricao();
             } else if (coluna == 3){
                 return resultadoAveriguacao.getResultado();
             }else{

@@ -24,6 +24,9 @@ public class BeneficioAndBeneficiarioDAO {
     private static final String SQL_BUSCAR_BENEFICIO_BENEFICIARIO = "SELECT BRIO.ID, BRIO.NIS, BRIO.NOME, BRIO.RUA, BRIO.NUMERO, BRIO.BAIRRO, BRIO.ZONA,\n" 
         +"BRIO.LOCALIDADE, BRIO.QTDE_MEMBROS, BRIO.RENDA_FAMILIAR, BRIO.RENDA_PER_CAPTA, B.ID , B.NOME, B.TIPO, B.VALOR FROM BENEFICIARIO BRIO \n" 
         +"JOIN BENEFICIO_BENEFICIARIO BB ON BRIO.ID = BB.ID_BENEFICIARIO JOIN BENEFICIO B ON BB.ID_BENEFICIO=B.ID";
+    public static final String SQL_DELETE_BENEFICIARIO = "DELETE * FROM BENEFICIO_BENEFICIARIO WHERE ID_BENEFICIARIO = ? "; 
+    public static final String SQL_DELETE_BENEFICIO = "DELETE * FROM BENEFICIO_BENEFICIARIO WHERE ID_BENEFICIO = ? ";
+    
     public void inserir(BeneficioAndBeneficiario beneficioAndBeneficiario) throws SQLException{
         Connection conexao = null;
         PreparedStatement comando = null;
@@ -106,6 +109,35 @@ public class BeneficioAndBeneficiarioDAO {
         beneficioAndBeneficiario.setBeneficio(extrairLinhaResultadoBeneficio(resultado));
         beneficioAndBeneficiario.setBeneficiario(extrairLinhaResultadoBeneficiario(resultado));
         return beneficioAndBeneficiario;
+    }
+
+    public void excluirBeneficario(BeneficioAndBeneficio beneficiarioAndBeneficio) {
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        
+        try {
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_EXCLUIR);
+            comando.setString(1, eneficiarioAndBeneficio.getBeneficiario().get);
+            comando.execute();
+            conexao.commit();
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+    }    }
+
+    public void excluirBeneficio() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

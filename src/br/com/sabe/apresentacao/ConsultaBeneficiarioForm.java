@@ -135,9 +135,7 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblBeneficiarios.setCellSelectionEnabled(false);
         tblBeneficiarios.setName(""); // NOI18N
-        tblBeneficiarios.setRowSelectionAllowed(true);
         tblBeneficiarios.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblBeneficiarios);
         tblBeneficiarios.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -172,6 +170,11 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
 
         btnExcluir3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/rubbish7 (2).png"))); // NOI18N
         btnExcluir3.setText("Excluir");
+        btnExcluir3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluir3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlResultado2Layout = new javax.swing.GroupLayout(pnlResultado2);
         pnlResultado2.setLayout(pnlResultado2Layout);
@@ -313,6 +316,30 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnExcluir3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluir3ActionPerformed
+        int linhaSelecionada = tblBeneficiarios.getSelectedRow();
+        try {
+            this.beneficiarioEmExclusao = beneficiarios.get(linhaSelecionada);
+            BeneficiarioBO beneficiarioBO = new BeneficiarioBO();               
+            String mensagem = "Deseja excluir beneficiario?";
+            String titulo = "Excluir Beneficiario";
+            int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
+            if (resposta == JOptionPane.YES_OPTION) {
+                BeneficioAndBeneficiarioBO benficioAndBeneficiarioBO = new BeneficioAndBeneficiarioBO();
+                benficioAndBeneficiarioBO.excluirBeneficiario(this.beneficiarioEmExclusao);   
+                JOptionPane.showMessageDialog(this, "Usuario excluido com sucesso!", "Excluir Usuario", JOptionPane.INFORMATION_MESSAGE);
+                carregarTabelaBeneficiarios();
+            }
+        } catch (SQLException ex) {
+            String mensagem = null;
+                mensagem += "\nMensagem de erro:\n" + ex.getMessage();
+            JOptionPane.showMessageDialog(this, mensagem, "Excluir Usuario", JOptionPane.ERROR_MESSAGE);
+        }catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(this,e.getMessage(),"Selecione uma linha da tabela para poder excluir alguma venda.", 
+                    JOptionPane.ERROR_MESSAGE);
+        } 
+    }//GEN-LAST:event_btnExcluir3ActionPerformed
 
     /**
      * @param args the command line arguments

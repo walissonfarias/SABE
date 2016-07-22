@@ -3,9 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/walisson/NetBeansProjects/SABE/src/br/com/sabe/apresentacao/CadastroPedidoAveriguacaoForm.java</file>
-            <file>file:/home/walisson/NetBeansProjects/SABE/src/br/com/sabe/apresentacao/CadastroUsuarioForm.java</file>
-            <file>file:/home/walisson/NetBeansProjects/SABE/src/br/com/sabe/apresentacao/CadastroBeneficiarioForm.java</file>
+            <file>file:/home/walisson/NetBeansProjects/SABE/src/br/com/sabe/negocio/BeneficiarioBO.java</file>
+            <file>file:/home/walisson/NetBeansProjects/SABE/src/br/com/sabe/apresentacao/ConsultaBeneficiarioForm.java</file>
+            <file>file:/home/walisson/NetBeansProjects/SABE/src/br/com/sabe/persistencia/BeneficioAndBeneficiarioDAO.java</file>
         </group>
     </open-files>
 </project-private>

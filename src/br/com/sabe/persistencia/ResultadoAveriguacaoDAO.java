@@ -13,25 +13,52 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import static jdk.nashorn.internal.objects.Global.setDate;
 
 /**
  *
  * @author walisson
  */
 public class ResultadoAveriguacaoDAO {
-    private static final String SQL_INSERT = "INSERT INTO RESULTADO(RESULTADO, DECISAO, ID_PEDIDO)VALUES(?,?,?)";
+    private static final String SQL_INSERT = "INSERT INTO RESULTADO(DATA_RESULTADO, RESULTADO, DECISAO, ID_PEDIDO)VALUES(?, ?,?,?)";
     private static final String SQL_BUSCAR_TODOS = "SELECT*FROM PEDIDO P JOIN RESULTADO R ON P.ID=R.ID_PEDIDO"; 
     
-    public void inserir(PedidoAveriguacao pedidoAveriguacao, ResultadoAveriguacao resultadoAveriguacao) throws SQLException{
+    public void inserir(ResultadoAveriguacao resultadoAveriguacao) throws SQLException{
         Connection conexao = null;
         PreparedStatement comando = null;
         
         try{
             conexao = BancoDadosUtil.getConnection();
             comando = conexao.prepareStatement(SQL_INSERT);
-            comando.setString(1,resultadoAveriguacao.getResultado()); 
-            comando.setString(2,resultadoAveriguacao.getDecisao());
-            comando.setInt(2,resultadoAveriguacao.getPedidoAveriguacao().getId());
+            java.sql.Date dataSql = new java.sql.Date(resultadoAveriguacao.getDataResultado().getTime());
+            comando.setDate(1, dataSql);
+            comando.setString(2,resultadoAveriguacao.getResultado()); 
+            comando.setString(3,resultadoAveriguacao.getDecisao());
+            comando.setInt(4,resultadoAveriguacao.getPedidoAveriguacao().getId());
+            comando.execute();
+            conexao.commit();
+        }catch(Exception e){
+            if(conexao!= null){
+                conexao.rollback();
+            }
+            throw e;
+        }finally{
+            BancoDadosUtil.fecharChamadasBancoDados(conexao, comando);
+        }
+        
+    }
+    public void atualizar(ResultadoAveriguacao resultadoAveriguacao) throws SQLException{
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        
+        try{
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_INSERT);
+            java.sql.Date dataSql = new java.sql.Date(resultadoAveriguacao.getDataResultado().getTime());
+            comando.setDate(1, dataSql);
+            comando.setString(2,resultadoAveriguacao.getResultado()); 
+            comando.setString(3,resultadoAveriguacao.getDecisao());
+            comando.setInt(4,resultadoAveriguacao.getPedidoAveriguacao().getId());
             comando.execute();
             conexao.commit();
         }catch(Exception e){
@@ -77,11 +104,13 @@ public class ResultadoAveriguacaoDAO {
         PedidoAveriguacao pedidoAveriguacao = new PedidoAveriguacao();
         ResultadoAveriguacao resultadoAveriguacao = new ResultadoAveriguacao(); 
         pedidoAveriguacao.setId(resultado.getInt(1));
-        pedidoAveriguacao.setSituacao(resultado.getString(2));
-        pedidoAveriguacao.beneficiario.setId(resultado.getInt(3));
-        resultadoAveriguacao.setId(resultado.getInt(4));
-        resultadoAveriguacao.setResultado(resultado.getString(5)); 
-        resultadoAveriguacao.setDecisao(resultado.getString(6));  
+        pedidoAveriguacao.setDataPedido(resultado.getTimestamp(2));
+        pedidoAveriguacao.setDescricao(resultado.getString(3));
+        pedidoAveriguacao.beneficiario.setId(resultado.getInt(4));
+        resultadoAveriguacao.setId(resultado.getInt(5));
+        resultadoAveriguacao.setDataResultado(resultado.getTimestamp(6));
+        resultadoAveriguacao.setResultado(resultado.getString(7)); 
+        resultadoAveriguacao.setDecisao(resultado.getString(8));  
         resultadoAveriguacao.setPedidoAveriguacao(pedidoAveriguacao);        
         return resultadoAveriguacao;
     }

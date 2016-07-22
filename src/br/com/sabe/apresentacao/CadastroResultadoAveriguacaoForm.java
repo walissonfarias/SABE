@@ -5,19 +5,90 @@
  */
 package br.com.sabe.apresentacao;
 
+import br.com.sabe.entidade.Beneficiario;
+import br.com.sabe.entidade.PedidoAveriguacao;
+import br.com.sabe.entidade.ResultadoAveriguacao;
+import br.com.sabe.excecao.CampoObrigatorioException;
+import br.com.sabe.excecao.SistemaAveriguacaoException;
+import br.com.sabe.negocio.BeneficiarioBO;
+import br.com.sabe.negocio.ResultadoAveriguacaoBO;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author walisson
  */
 public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
-
+    PedidoAveriguacao pedidoAveriguacao;
+    ResultadoAveriguacao resultadoAveriguacao;
+    ConsultaResultadoAveriguacaoForm consultaResultado;
+    Beneficiario beneficiario;
+    int acaoTela = 0;
     /**
      * Creates new form CadastroResultadoAveriguacao
      */
-    public CadastroResultadoAveriguacaoForm() {
-        initComponents();
+    public CadastroResultadoAveriguacaoForm(){
+        prepararTela();
     }
+    public CadastroResultadoAveriguacaoForm(PedidoAveriguacao pedidoCadastrado){
+        this.pedidoAveriguacao = pedidoCadastrado;
+        this.beneficiario = pedidoCadastrado.getBeneficiario();
+        prepararTela();
+    }
+    public CadastroResultadoAveriguacaoForm(ResultadoAveriguacao resultadoConsultado){
+        this.resultadoAveriguacao = resultadoConsultado;
+        prepararTela();
+    }
+    private void prepararTela() {
+        try {
+            this.initComponents();
+        } catch (Exception e) {
+            String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
+            mensagem += "\nMensagem de erro:\n" + e.getMessage();
+            JOptionPane.showMessageDialog(this, mensagem, "Cadastro de aluno", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+        }
+    }
+    private void buscarPedidoAveriguacao(){
+        
+    }
+    public void inicializarCamposPedidoTela(){
+        
+    }
+    public void recuperarCamposTela(){
+    
+    }
+    private void validarCamposObrigatorios(){
+        if(this.txtDataPedido.getText().trim().equals("") ||
+                this.txtDescricaoMotivo.getText().trim().equals("") ||
+                this.txtNisTitular.getText().trim().equals("") ||
+                this.lblNomeTitularAtivo.getText().trim().equals("") ||
+                this.txtDataResultado.getText().trim().equals("") ||
+                this.txtDescricaoResultado.getText().trim().equals("")){
+            throw new CampoObrigatorioException();
+        }
+    }
+    private String lerNisTitular() {
+        String nis = txtNisTitular.getText().trim();
 
+        String mensagem = "";
+
+        if (nis.length() < 11) {
+            mensagem = "NIS inválido";
+        }
+
+        if (!(mensagem == "" || mensagem == null)) {
+            throw new CampoObrigatorioException(mensagem);
+        }
+
+        return nis;
+    }
+    private void setNomeBeneficiarioTela() {
+        lblNomeTitular.setVisible(true);
+        lblNomeTitularAtivo.setText(beneficiario.getNome());
+        lblNomeTitularAtivo.setVisible(true);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,21 +105,25 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
         btnNovo = new javax.swing.JButton();
         btnSalvar = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
-        lblNome = new javax.swing.JLabel();
+        txtNisTitular = new javax.swing.JFormattedTextField();
+        lblNomeTitular = new javax.swing.JLabel();
         lblLogin = new javax.swing.JLabel();
-        txtNome = new javax.swing.JTextField();
+        btnVerificarNis = new javax.swing.JButton();
+        lblNomeTitularAtivo = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
+        txtDescricaoMotivo = new javax.swing.JTextArea();
+        lblDescriscaoMotivo = new javax.swing.JLabel();
+        lblDataPedido = new javax.swing.JLabel();
+        txtDataPedido = new javax.swing.JFormattedTextField();
         pnlResultadoAveriguacao = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        txtDescricaoResultado = new javax.swing.JTextArea();
         lblDecisaoAssistenteSocial = new javax.swing.JLabel();
-        lblDescrissaoResultado = new javax.swing.JLabel();
+        lblDescricaoResultado = new javax.swing.JLabel();
         cmbDecisaoAveriguacao = new javax.swing.JComboBox<>();
+        lblDataResultado = new javax.swing.JLabel();
+        txtDataResultado = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Tela de Cadastro de Resultado de Averiguacao");
@@ -99,20 +174,14 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Pedido de Averiguacao"));
 
-        jButton1.setText("Verificar");
-
-        lblNome.setText("*Nome do Titular:");
+        lblNomeTitular.setText("*Nome do Titular:");
 
         lblLogin.setText("*NIS do Beneficiario Titular:");
 
-        txtNome.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtNomeFocusLost(evt);
-            }
-        });
-        txtNome.addActionListener(new java.awt.event.ActionListener() {
+        btnVerificarNis.setText("Verificar");
+        btnVerificarNis.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNomeActionPerformed(evt);
+                btnVerificarNisActionPerformed(evt);
             }
         });
 
@@ -123,17 +192,16 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblLogin)
-                    .addComponent(lblNome))
-                .addGap(1, 1, 1)
+                    .addComponent(lblNomeTitular))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtNisTitular, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnVerificarNis, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(txtNome)
-                        .addContainerGap())))
+                    .addComponent(lblNomeTitularAtivo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -141,22 +209,26 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblLogin)
-                    .addComponent(jButton1)
-                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNisTitular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnVerificarNis))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNome)
-                    .addComponent(txtNome))
-                .addContainerGap())
+                    .addComponent(lblNomeTitular)
+                    .addComponent(lblNomeTitularAtivo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Motivo da Averiguação"));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txtDescricaoMotivo.setColumns(20);
+        txtDescricaoMotivo.setRows(5);
+        jScrollPane1.setViewportView(txtDescricaoMotivo);
 
-        jLabel1.setText("Descrissão do Motivo:");
+        lblDescriscaoMotivo.setText("Descrissão do Motivo:");
+
+        lblDataPedido.setText("Data do Pedido:");
+
+        txtDataPedido.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -164,9 +236,15 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblDescriscaoMotivo, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDataPedido))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(txtDataPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -174,23 +252,28 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(8, 8, 8)
+                        .addComponent(lblDataPedido)
+                        .addGap(31, 31, 31)
+                        .addComponent(lblDescriscaoMotivo)
+                        .addGap(0, 38, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(47, 47, 47)
-                        .addComponent(jLabel1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(1, 1, 1)
+                        .addComponent(txtDataPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
-        pnlResultadoAveriguacao.setBorder(javax.swing.BorderFactory.createTitledBorder("Motivo da Averiguação"));
+        pnlResultadoAveriguacao.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultado da Averiguação"));
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        txtDescricaoResultado.setColumns(20);
+        txtDescricaoResultado.setRows(5);
+        jScrollPane2.setViewportView(txtDescricaoResultado);
 
-        lblDecisaoAssistenteSocial.setText("Decisão do Assistente Social:");
+        lblDecisaoAssistenteSocial.setText("Decisão:");
 
-        lblDescrissaoResultado.setText("Descrissão do Resultado:");
+        lblDescricaoResultado.setText("Descrição:");
 
         cmbDecisaoAveriguacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bloquear recebimento do benefício", "Cadastro de acordo com o informado", " " }));
         cmbDecisaoAveriguacao.addActionListener(new java.awt.event.ActionListener() {
@@ -199,6 +282,10 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
             }
         });
 
+        lblDataResultado.setText("Data do Resultado:");
+
+        txtDataResultado.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
+
         javax.swing.GroupLayout pnlResultadoAveriguacaoLayout = new javax.swing.GroupLayout(pnlResultadoAveriguacao);
         pnlResultadoAveriguacao.setLayout(pnlResultadoAveriguacaoLayout);
         pnlResultadoAveriguacaoLayout.setHorizontalGroup(
@@ -206,32 +293,37 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
             .addGroup(pnlResultadoAveriguacaoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlResultadoAveriguacaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlResultadoAveriguacaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(lblDescricaoResultado, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                        .addComponent(lblDecisaoAssistenteSocial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblDataResultado))
+                .addGap(59, 59, 59)
+                .addGroup(pnlResultadoAveriguacaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlResultadoAveriguacaoLayout.createSequentialGroup()
-                        .addComponent(lblDecisaoAssistenteSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbDecisaoAveriguacao, javax.swing.GroupLayout.PREFERRED_SIZE, 486, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 4, Short.MAX_VALUE))
-                    .addGroup(pnlResultadoAveriguacaoLayout.createSequentialGroup()
-                        .addComponent(lblDescrissaoResultado, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2)))
+                        .addComponent(txtDataResultado, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(cmbDecisaoAveriguacao, 0, 554, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
         );
         pnlResultadoAveriguacaoLayout.setVerticalGroup(
             pnlResultadoAveriguacaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlResultadoAveriguacaoLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlResultadoAveriguacaoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlResultadoAveriguacaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDataResultado)
+                    .addComponent(txtDataResultado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnlResultadoAveriguacaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlResultadoAveriguacaoLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlResultadoAveriguacaoLayout.createSequentialGroup()
-                        .addGap(46, 46, 46)
-                        .addComponent(lblDescrissaoResultado)))
+                        .addGap(34, 34, 34)
+                        .addComponent(lblDescricaoResultado)))
                 .addGap(18, 18, 18)
                 .addGroup(pnlResultadoAveriguacaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblDecisaoAssistenteSocial, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(cmbDecisaoAveriguacao, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout pnlCadastroPedidoAveriguacaoLayout = new javax.swing.GroupLayout(pnlCadastroPedidoAveriguacao);
@@ -269,12 +361,13 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
                 .addComponent(pnlResultadoAveriguacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblCamposObrigatorios)
-                .addGap(15, 15, 15)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlCadastroPedidoAveriguacaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -298,32 +391,79 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        
+        String mensagem = "Os dados ja preenchidos serao descartados";
+        String titulo = "Pesquisar Pedidos de Averiguações Cadastrados";
+        int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) {
+            limparCamposTela();
+            if(this.consultaResultado == null){
+                consultaResultado = new ConsultaResultadoAveriguacaoForm();
+            }
+            consultaResultado.setVisible(true);
+            this.dispose();
+        } 
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
-    private void txtNomeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNomeFocusLost
-        
-    }//GEN-LAST:event_txtNomeFocusLost
-
-    private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
-
-    }//GEN-LAST:event_txtNomeActionPerformed
-
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
-        this.dispose();
+        String mensagem = "Deseja fechar a tela de cadastros de usuarios?"
+                + "Os dados ja preenchidos serao descartados!";
+        String titulo = "Fechar Tela Cadastro de Usuarios";
+        int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) {
+            limparCamposTela();
+            this.dispose();
+        }  
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        
+        int resposta;
+        String mensagem = "Os dados ja preenchidos serao descartados";
+        String titulo = "Cadastrar Novo";
+        resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) {
+            limparCamposTela();
+        }
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        
+        try {
+            ResultadoAveriguacaoBO resultadoAveriguacaoBO = new ResultadoAveriguacaoBO();
+            this.validarCamposObrigatorios();
+            this.recuperarCamposTela();
+            if(this.acaoTela == 0){
+                resultadoAveriguacaoBO.inserir(this.resultadoAveriguacao);
+                JOptionPane.showMessageDialog(this, "Usuario cadastrado com sucesso!", "Cadastro de usuario", JOptionPane.INFORMATION_MESSAGE);
+            }else{    
+                resultadoAveriguacaoBO.atualizar(this.resultadoAveriguacao);           
+                JOptionPane.showMessageDialog(this, "Cadasdatro atualizado com sucesso!", "Editar de usuario", JOptionPane.INFORMATION_MESSAGE);
+            } 
+            this.limparCamposTela();
+        }catch(SistemaAveriguacaoException sae){
+            String mensagem = "Erro ao realizar operação:\n" + sae.getMessage();
+            JOptionPane.showMessageDialog(this, mensagem, "Cadastro de aluno", JOptionPane.ERROR_MESSAGE);
+        }catch(Exception e){
+            String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
+            mensagem += "\nMensagem de erro:\n" + e.getMessage();
+            JOptionPane.showMessageDialog(this, mensagem, "Cadastro de usuario", JOptionPane.ERROR_MESSAGE);
+        }    
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void cmbDecisaoAveriguacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDecisaoAveriguacaoActionPerformed
         
     }//GEN-LAST:event_cmbDecisaoAveriguacaoActionPerformed
+
+    private void btnVerificarNisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerificarNisActionPerformed
+       try {
+            BeneficiarioBO beneficiarioBO= new BeneficiarioBO();
+            beneficiario = beneficiarioBO.buscarByNis(lerNisTitular());
+            this.setNomeBeneficiarioTela();
+        } catch (CampoObrigatorioException cve) {
+            JOptionPane.showMessageDialog(this, cve.getMessage(), "Consultar Beneficiario", JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Não foi possivel consultar o beneficiário \nTente novamente", "Cadastro pedido de Averiguacao", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_btnVerificarNisActionPerformed
 
     /**
      * @param args the command line arguments
@@ -368,23 +508,31 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnPesquisar;
     private javax.swing.JButton btnSalvar;
+    private javax.swing.JButton btnVerificarNis;
     private javax.swing.JComboBox<String> cmbDecisaoAveriguacao;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JLabel lblCamposObrigatorios;
+    private javax.swing.JLabel lblDataPedido;
+    private javax.swing.JLabel lblDataResultado;
     private javax.swing.JLabel lblDecisaoAssistenteSocial;
-    private javax.swing.JLabel lblDescrissaoResultado;
+    private javax.swing.JLabel lblDescricaoResultado;
+    private javax.swing.JLabel lblDescriscaoMotivo;
     private javax.swing.JLabel lblLogin;
-    private javax.swing.JLabel lblNome;
+    private javax.swing.JLabel lblNomeTitular;
+    private javax.swing.JLabel lblNomeTitularAtivo;
     private javax.swing.JPanel pnlCadastroPedidoAveriguacao;
     private javax.swing.JPanel pnlResultadoAveriguacao;
-    private javax.swing.JTextField txtNome;
+    private javax.swing.JFormattedTextField txtDataPedido;
+    private javax.swing.JFormattedTextField txtDataResultado;
+    private javax.swing.JTextArea txtDescricaoMotivo;
+    private javax.swing.JTextArea txtDescricaoResultado;
+    private javax.swing.JFormattedTextField txtNisTitular;
     // End of variables declaration//GEN-END:variables
+
+    private void limparCamposTela() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
