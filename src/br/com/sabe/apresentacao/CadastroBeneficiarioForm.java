@@ -41,7 +41,7 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
         this.beneficio = new Beneficio();
         this.beneficioAndBeneficiario = new BeneficioAndBeneficiario();
         BeneficioAndBeneficiario beneficioAndBeneficiario= new BeneficioAndBeneficiario();
-        prepararTela();
+        this.prepararTela();
     }
     
     public CadastroBeneficiarioForm(ConsultaBeneficiarioForm consultaBeneficiarioForm,
@@ -57,6 +57,7 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
         try {
             this.initComponents();
             this.carregarComboBeneficios();
+            this.limitandoCampos();
             if(acaoTela == 1){
                 this.inicializarCamposTela();
                 this.txtNis.setEnabled(false);
@@ -68,7 +69,10 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
             this.dispose();
         }
     }
-    
+    public void limitandoCampos(){
+        txtNis.setDocument(new DocumentoLimitado(11));
+        txtNome.setDocument(new DocumentoLimitado(60));
+    }    
     public void carregarComboBeneficios() throws SQLException {
         BeneficioBO beneficioBO = new BeneficioBO();
         this.beneficios = beneficioBO.buscarTodos();

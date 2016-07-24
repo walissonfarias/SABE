@@ -23,15 +23,16 @@ import static jdk.nashorn.internal.objects.Global.setDate;
  */
 public class ResultadoAveriguacaoDAO {
     private static final String SQL_INSERT = "INSERT INTO RESULTADO(DATA_RESULTADO, RESULTADO, DECISAO, ID_PEDIDO)VALUES(?, ?,?,?)";
-    private static final String SQL_BUSCAR_BY_NIS = "SELECT BRIO.ID, BRIO.NIS, BRIO.NOME,BRIO.ZONA, BRIO.LOCALIDADE, "
+    private static final String SQL_BUSCAR_BY_NIS = "SELECT R.ID, R.DATA_RESULTADO, R.RESULTADO, R.DECISAO, BRIO.ID, BRIO.NIS, BRIO.NOME,BRIO.ZONA, BRIO.LOCALIDADE, "
             + "BRIO.BAIRRO,BRIO.RUA, BRIO.NUMERO, BRIO.RENDA_FAMILIAR,BRIO.RENDA_PER_CAPTA,P.ID, P.DATA_PEDIDO, P.SITUACAO "
-            + "R.DATA_RESULTADO, R.RESULTADO, R.DECISAO FROM BENEFICIARIO BRIO JOIN PEDIDO P ON BRIO.ID=P.ID_BENEFICIARIO "
+            + "FROM BENEFICIARIO BRIO JOIN PEDIDO P ON BRIO.ID=P.ID_BENEFICIARIO "
             + "JOIN RESULTADO R ON P.ID=R.ID_PEDIDO WHERE BRIO.NIS=?";
-    private static final String SQL_BUSCAR_TODOS = "SELECT BRIO.ID, BRIO.NIS, BRIO.NOME,BRIO.ZONA, BRIO.LOCALIDADE, "
+    private static final String SQL_BUSCAR_TODOS = "SELECT R.ID, R.DATA_RESULTADO, R.RESULTADO, R.DECISAO,BRIO.ID, BRIO.NIS, BRIO.NOME,BRIO.ZONA, BRIO.LOCALIDADE, "
             + "BRIO.BAIRRO,BRIO.RUA, BRIO.NUMERO, BRIO.RENDA_FAMILIAR,BRIO.RENDA_PER_CAPTA,P.ID, P.DATA_PEDIDO, P.SITUACAO "
-            + "R.DATA_RESULTADO, R.RESULTADO, R.DECISAO FROM BENEFICIARIO BRIO JOIN PEDIDO P ON BRIO.ID=P.ID_BENEFICIARIO "
+            + " FROM BENEFICIARIO BRIO JOIN PEDIDO P ON BRIO.ID=P.ID_BENEFICIARIO "
             + "JOIN RESULTADO R ON P.ID=R.ID_PEDIDO"; 
     private static final String SQL_BUSCAR_BY_ID_PEDIDO = "SELECT*FROM RESULTADO WHERE ID_PEDIDO=?";
+    private static final String SQL_EXCLUIR = "DELETE FROM RESULTADO WHERE ID=?";
     public void inserir(ResultadoAveriguacao resultadoAveriguacao) throws SQLException{
         Connection conexao = null;
         PreparedStatement comando = null;
@@ -79,6 +80,30 @@ public class ResultadoAveriguacaoDAO {
             BancoDadosUtil.fecharChamadasBancoDados(conexao, comando);
         }
         
+    }
+    public void excluir(ResultadoAveriguacao resultadoAveriguacao) throws SQLException{
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        
+        try {
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_EXCLUIR);
+            comando.setInt(1, resultadoAveriguacao.getId());
+            comando.execute();
+            conexao.commit();
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
     }
     public List<ResultadoAveriguacao> buscarResultadoByNis(String nis) throws SQLException{
         Connection conexao = null;
@@ -163,30 +188,31 @@ public class ResultadoAveriguacaoDAO {
     private PedidoAveriguacao extrairLinhaResultadoPedido(ResultSet resultado) throws SQLException{
         PedidoAveriguacao pedidoAveriguacao = new PedidoAveriguacao();
         Beneficiario beneficiario = new Beneficiario();
-        beneficiario.setId(resultado.getInt(1));
-        beneficiario.setNis(resultado.getString(2));
-        beneficiario.setNome(resultado.getString(3));
-        beneficiario.setRua(resultado.getString(4));
-        beneficiario.setNumero(resultado.getInt(5));
-        beneficiario.setBairro(resultado.getString(6));
-        beneficiario.setZona(resultado.getString(7));
-        beneficiario.setLocalidade(resultado.getString(8));
-        beneficiario.setRendaFamiliar(resultado.getDouble(9));
-        beneficiario.setRendaPerCapta(resultado.getDouble(10));
-        pedidoAveriguacao.setId(resultado.getInt(11));
-        pedidoAveriguacao.setDataPedido(resultado.getTimestamp(12));
-        pedidoAveriguacao.setSituacao(resultado.getString(13));
+        beneficiario.setId(resultado.getInt(5));
+        beneficiario.setNis(resultado.getString(6));
+        beneficiario.setNome(resultado.getString(7));
+        beneficiario.setZona(resultado.getString(8));
+        beneficiario.setLocalidade(resultado.getString(9));
+        beneficiario.setBairro(resultado.getString(10));
+        beneficiario.setRua(resultado.getString(11));
+        beneficiario.setNumero(resultado.getInt(12));  
+        beneficiario.setRendaFamiliar(resultado.getDouble(13));
+        beneficiario.setRendaPerCapta(resultado.getDouble(14));
+        pedidoAveriguacao.setId(resultado.getInt(15));
+        pedidoAveriguacao.setDataPedido(resultado.getTimestamp(16));
+        pedidoAveriguacao.setSituacao(resultado.getString(17));
         pedidoAveriguacao.setBeneficiario(beneficiario);
         return pedidoAveriguacao;
     }
     private ResultadoAveriguacao extrairLinhaResultado(ResultSet resultado) throws SQLException {
         //Instancia um novo objeto e atribui os valores vindo do BD
         //(Note que no BD o index inicia por 1)      
-        ResultadoAveriguacao resultadoAveriguacao = new ResultadoAveriguacao();        
+        ResultadoAveriguacao resultadoAveriguacao = new ResultadoAveriguacao();
+        resultadoAveriguacao.setId(resultado.getInt(1));
+        resultadoAveriguacao.setDataResultado(resultado.getTimestamp(2));
+        resultadoAveriguacao.setResultado(resultado.getString(3));
+        resultadoAveriguacao.setDecisao(resultado.getString(4));        
         resultadoAveriguacao.setPedidoAveriguacao(extrairLinhaResultadoPedido(resultado));
-        resultadoAveriguacao.setDataResultado(resultado.getTimestamp(15));
-        resultadoAveriguacao.setResultado(resultado.getString(16));
-        resultadoAveriguacao.setDecisao(resultado.getString(17));       
         return resultadoAveriguacao;
     }
 }

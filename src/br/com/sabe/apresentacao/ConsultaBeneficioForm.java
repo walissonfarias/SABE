@@ -189,7 +189,7 @@ public class ConsultaBeneficioForm extends javax.swing.JFrame {
             int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
             if (resposta == JOptionPane.YES_OPTION) {
                 beneficioBO.excluirBeneficio(this.beneficioEmExclusao); 
-                JOptionPane.showMessageDialog(this, "Beneficios e beneficiarios excluido com sucesso!", "Excluir Beneficicio", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Beneficios excluido com sucesso!", "Excluir Beneficicio", JOptionPane.INFORMATION_MESSAGE);
                 carregarTabelaBeneficios();
             }
         } catch (SQLException ex) {

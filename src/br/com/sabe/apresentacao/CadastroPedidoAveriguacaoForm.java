@@ -33,17 +33,17 @@ public class CadastroPedidoAveriguacaoForm extends javax.swing.JFrame {
      */
     public CadastroPedidoAveriguacaoForm() {
         this.acaoTela = 0;
-        this.prepararTela();
+        this.initComponents();
         this.pedidoAveriguacao = new PedidoAveriguacao();
     }
     public CadastroPedidoAveriguacaoForm(Beneficiario beneficiarioCadastrado){
-        this.acaoTela = 1;
+        this.acaoTela = 0;
         this.beneficiario = beneficiarioCadastrado;
         this.prepararTela();
     }
     public CadastroPedidoAveriguacaoForm(PedidoAveriguacao pedidoAveriguacaoConsultado,
             ConsultaPedidoAveriguacaoForm consultaPedidoAveriguacaoForm){
-        this.acaoTela = 2;
+        this.acaoTela = 1;
         this.pedidoAveriguacao = pedidoAveriguacaoConsultado;
         this.consultaPedido = consultaPedidoAveriguacaoForm;
         this.beneficiario = pedidoAveriguacaoConsultado.getBeneficiario();
@@ -52,9 +52,7 @@ public class CadastroPedidoAveriguacaoForm extends javax.swing.JFrame {
     public void prepararTela(){
         try {
             this.initComponents();
-            if(acaoTela != 0){
-                this.inicializarCamposTela();
-            }    
+            this.inicializarCamposTela();  
         } catch (Exception e) {
             String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
             mensagem += "\nMensagem de erro:\n" + e.getMessage();
@@ -67,7 +65,7 @@ public class CadastroPedidoAveriguacaoForm extends javax.swing.JFrame {
         this.txtNisTitular.setText(beneficiario.getNis());
         this.lblNomeTitularAtivo.setEnabled(false);
         this.txtNisTitular.setEnabled(false);
-        if(this.acaoTela == 2){
+        if(this.acaoTela == 1){
             SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");        
             this.txtDataPedido.setText(formatador.format(this.pedidoAveriguacao.getDataPedido()));
             this.txtSituacao.setText(pedidoAveriguacao.getSituacao());

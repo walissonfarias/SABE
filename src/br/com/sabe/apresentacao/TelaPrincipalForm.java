@@ -44,9 +44,15 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         initComponents();
         //JInternalFrame1.pack();
         //JInternalFrame1.setSize(540, 540);
-        mostrarComponentsSemUsuario();
+        this.mostrarComponentsSemUsuario();
+        this.limitarCamposTela();
     }
-    
+    public void limitarCamposTela(){
+        this.txtLogin.setDocument(new DocumentoLimitado(10));
+        this.txtSenha.setDocument(new DocumentoLimitado(10));
+        this.txtConfirmaSenha.setDocument(new DocumentoLimitado(10));
+        
+    }
     private void carregarUsuarioPermissao(){
         if(usuario.getCargo().equals("G")){
             mnuUsuarios.setVisible(true);
@@ -77,6 +83,7 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         }
     }
     public void mostrarComponentsComUsuario(){
+        this.setExtendedState(6);
         txtLogin.setEnabled(false);
         txtSenha.setEnabled(false);
         lblConfirmarSenha.setEnabled(false);
@@ -88,6 +95,7 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         mnuBarMenuPrincipal.setVisible(true);
     }
     public void mostrarComponentsSemUsuario(){
+        this.setExtendedState(0);
         txtLogin.setEnabled(true);
         txtSenha.setEnabled(true);
         lblConfirmarSenha.setEnabled(false);
@@ -169,7 +177,6 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Tela Principal");
-        setExtendedState(6);
 
         jIntFrameTelaLogin.setTitle("Tela de Login");
         jIntFrameTelaLogin.setVisible(true);

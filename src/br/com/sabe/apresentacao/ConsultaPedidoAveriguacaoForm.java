@@ -35,6 +35,7 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
         try {
             this.initComponents();
             this.carregarTabelaPedidoAveriguacao();
+            this.limitandoCampos();
             //this.carregarComboLocalidade();
         } catch (Exception e) {
             String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
@@ -42,6 +43,9 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, mensagem, "Pesquisar Usuarios", JOptionPane.ERROR_MESSAGE);
             this.dispose();
         }
+    }
+    public void limitandoCampos(){
+        this.txtNis.setDocument(new DocumentoLimitado(11));
     }
     public void carregarComboLocalidade() throws SQLException {
         PedidoAveriguacaoBO pedidoAveriguacaoBO = new PedidoAveriguacaoBO();
@@ -78,8 +82,8 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
         btnFechar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
         pnlFiltro = new javax.swing.JPanel();
-        lblMatricula = new javax.swing.JLabel();
-        txtMatricula = new javax.swing.JFormattedTextField();
+        lblNis = new javax.swing.JLabel();
+        txtNis = new javax.swing.JFormattedTextField();
         lblNome = new javax.swing.JLabel();
         txtNome = new javax.swing.JTextField();
         lblCurso = new javax.swing.JLabel();
@@ -170,9 +174,9 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
 
         pnlFiltro.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtro"));
 
-        lblMatricula.setText("NIS do Beneficiario Titular:");
+        lblNis.setText("NIS do Beneficiario Titular:");
 
-        txtMatricula.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txtNis.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
         lblNome.setText("Nome do Beneficiario Titular:");
 
@@ -194,10 +198,10 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
                     .addComponent(cmbLocalidade, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnlFiltroLayout.createSequentialGroup()
                         .addGroup(pnlFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblMatricula)
+                            .addComponent(lblNis)
                             .addComponent(lblNome)
                             .addComponent(lblCurso)
-                            .addComponent(txtMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNis, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -206,9 +210,9 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
             pnlFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlFiltroLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblMatricula)
+                .addComponent(lblNis)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtNis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblNome)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -333,12 +337,12 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
     private javax.swing.JComboBox cmbLocalidade;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCurso;
-    private javax.swing.JLabel lblMatricula;
+    private javax.swing.JLabel lblNis;
     private javax.swing.JLabel lblNome;
     private javax.swing.JPanel pnlFiltro;
     private javax.swing.JPanel pnlResultado2;
     private javax.swing.JTable tblPedidoAveriguacao;
-    private javax.swing.JFormattedTextField txtMatricula;
+    private javax.swing.JFormattedTextField txtNis;
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables
     private class ModeloTabelaPedidoAveriguacao extends AbstractTableModel {

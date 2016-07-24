@@ -26,6 +26,10 @@ public class ResultadoAveriguacaoBO {
         ResultadoAveriguacaoDAO resultadoAveriguacaoDAO = new ResultadoAveriguacaoDAO();
         resultadoAveriguacaoDAO.atualizar(resultadoAveriguacao);
     }
+    public void excluir(ResultadoAveriguacao resultadoAveriguacao) throws SQLException{
+        ResultadoAveriguacaoDAO resultadoAveriguacaoDAO = new ResultadoAveriguacaoDAO();
+        resultadoAveriguacaoDAO.excluir(resultadoAveriguacao);
+    }
     public List<ResultadoAveriguacao> buscarResultadoByNis(String nis) throws SQLException{
          ResultadoAveriguacaoDAO resultadoAveriguacaoDAO = new ResultadoAveriguacaoDAO();
         return resultadoAveriguacaoDAO.buscarResultadoByNis(nis);  

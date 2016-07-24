@@ -52,6 +52,7 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
         try {
             this.initComponents();
             this.desabilitarBotoesTela();
+            this.limitarCamposTela();
         } catch (Exception e) {
             String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
             mensagem += "\nMensagem de erro:\n" + e.getMessage();
@@ -59,6 +60,12 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
             this.dispose();
         }
 
+    }
+    public void limitarCamposTela(){
+        this.txtLogin.setDocument(new DocumentoLimitado(10));
+        this.txtNome.setDocument(new DocumentoLimitado(60));
+        this.txtSenha.setDocument(new DocumentoLimitado(10));
+        this.txtRepitaSenha.setDocument(new DocumentoLimitado(10));
     }
     private void desabilitarBotoesTela() throws SQLException{
         UsuarioBO usuarioBO = new UsuarioBO();

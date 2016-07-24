@@ -47,12 +47,17 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
             this.initComponents();
             this.carregarTabelaBeneficiarios();
             this.carregarComboBeneficios();
+            this.limitandoCampos();
         } catch (Exception e) {
             String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
             mensagem += "\nMensagem de erro:\n" + e.getMessage();
             JOptionPane.showMessageDialog(this, mensagem, "Pesquisar Usuarios", JOptionPane.ERROR_MESSAGE);
             this.dispose();
         }
+    }
+    public void limitandoCampos(){
+        this.txtNis.setDocument(new DocumentoLimitado(11));
+        this.txtNome.setDocument(new DocumentoLimitado((60)));
     }
     public void carregarComboBeneficios() throws SQLException {
         BeneficioBO beneficioBO = new BeneficioBO();
