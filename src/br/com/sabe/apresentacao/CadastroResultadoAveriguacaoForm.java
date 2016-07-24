@@ -11,8 +11,14 @@ import br.com.sabe.entidade.ResultadoAveriguacao;
 import br.com.sabe.excecao.CampoObrigatorioException;
 import br.com.sabe.excecao.SistemaAveriguacaoException;
 import br.com.sabe.negocio.BeneficiarioBO;
+import br.com.sabe.negocio.PedidoAveriguacaoBO;
 import br.com.sabe.negocio.ResultadoAveriguacaoBO;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,29 +26,33 @@ import javax.swing.JOptionPane;
  * @author walisson
  */
 public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
-    PedidoAveriguacao pedidoAveriguacao;
-    ResultadoAveriguacao resultadoAveriguacao;
-    ConsultaResultadoAveriguacaoForm consultaResultado;
-    Beneficiario beneficiario;
+    PedidoAveriguacao pedidoAveriguacao = null;
+    ResultadoAveriguacao resultadoAveriguacao = null;
+    ConsultaResultadoAveriguacaoForm consultaResultado = null;
+    List<PedidoAveriguacao> listaPedidoAveriguacao = new ArrayList<>();
+    List<ResultadoAveriguacao> listaResultadoAveriguacao = new ArrayList<>();
     int acaoTela = 0;
     /**
      * Creates new form CadastroResultadoAveriguacao
      */
     public CadastroResultadoAveriguacaoForm(){
-        prepararTela();
+        this.acaoTela = 0;
+        this.resultadoAveriguacao = new ResultadoAveriguacao();
+        this.initComponents();
+        this.desativarCamposPedidoAveriguacao();
     }
-    public CadastroResultadoAveriguacaoForm(PedidoAveriguacao pedidoCadastrado){
-        this.pedidoAveriguacao = pedidoCadastrado;
-        this.beneficiario = pedidoCadastrado.getBeneficiario();
-        prepararTela();
-    }
-    public CadastroResultadoAveriguacaoForm(ResultadoAveriguacao resultadoConsultado){
+    public CadastroResultadoAveriguacaoForm(ResultadoAveriguacao resultadoConsultado,
+            ConsultaResultadoAveriguacaoForm consultaResultadoAveriguacaoForm){
+        this.acaoTela = 1;
         this.resultadoAveriguacao = resultadoConsultado;
-        prepararTela();
+        this.pedidoAveriguacao = resultadoConsultado.getPedidoAveriguacao();
+        this.prepararTela();
     }
     private void prepararTela() {
         try {
             this.initComponents();
+            this.desativarCamposPedidoAveriguacao();
+            this.inicializarCamposPedidoTela();
         } catch (Exception e) {
             String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
             mensagem += "\nMensagem de erro:\n" + e.getMessage();
@@ -50,24 +60,51 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
             this.dispose();
         }
     }
-    private void buscarPedidoAveriguacao(){
-        
+    public void desativarCamposPedidoAveriguacao(){
+        this.txtDataPedido.setEnabled(false);
+        this.txtSituacao.setEnabled(false);        
     }
     public void inicializarCamposPedidoTela(){
-        
+        this.lblNomeTitularAtivo.setText(pedidoAveriguacao.getBeneficiario().getNome());
+        this.txtNisTitular.setText(pedidoAveriguacao.getBeneficiario().getNis());
+        this.lblNomeTitularAtivo.setEnabled(false);
+        this.txtNisTitular.setEnabled(false);
+        this.desativarCamposPedidoAveriguacao();
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");        
+        this.txtDataPedido.setText(formatador.format(this.pedidoAveriguacao.getDataPedido()));
+        this.txtSituacao.setText(pedidoAveriguacao.getSituacao());
     }
-    public void recuperarCamposTela(){
-    
+    public void recuperarCamposTela() throws ParseException{
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = formatador.parse(txtDataResultado.getText().trim());
+        this.resultadoAveriguacao.setDataResultado(data);
+        this.resultadoAveriguacao.setResultado(txtDescricaoResultado.getText());
+        if(cmbDecisaoAveriguacao.getSelectedIndex() > 0){
+            String decisaoSelecionada = cmbDecisaoAveriguacao.getSelectedItem().toString();
+            this.resultadoAveriguacao.setDecisao(decisaoSelecionada);
+        }else{
+            throw new CampoObrigatorioException();
+        }
+        this.resultadoAveriguacao.setPedidoAveriguacao(this.pedidoAveriguacao);
     }
     private void validarCamposObrigatorios(){
         if(this.txtDataPedido.getText().trim().equals("") ||
-                this.txtDescricaoMotivo.getText().trim().equals("") ||
+                this.txtSituacao.getText().trim().equals("") ||
                 this.txtNisTitular.getText().trim().equals("") ||
                 this.lblNomeTitularAtivo.getText().trim().equals("") ||
                 this.txtDataResultado.getText().trim().equals("") ||
                 this.txtDescricaoResultado.getText().trim().equals("")){
             throw new CampoObrigatorioException();
         }
+    }
+    public void limparCamposTela(){
+        this.txtDataPedido.setText("");
+        this.txtSituacao.setText("");
+        this.txtNisTitular.setText("");
+        this.lblNomeTitularAtivo.setText("");
+        this.txtDataResultado.setText("");
+        this.txtDescricaoResultado.setText("");
+        this.cmbDecisaoAveriguacao.setSelectedIndex(0);
     }
     private String lerNisTitular() {
         String nis = txtNisTitular.getText().trim();
@@ -86,7 +123,7 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
     }
     private void setNomeBeneficiarioTela() {
         lblNomeTitular.setVisible(true);
-        lblNomeTitularAtivo.setText(beneficiario.getNome());
+        lblNomeTitularAtivo.setText(pedidoAveriguacao.getBeneficiario().getNome());
         lblNomeTitularAtivo.setVisible(true);
     }
     /**
@@ -112,7 +149,7 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
         lblNomeTitularAtivo = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        txtDescricaoMotivo = new javax.swing.JTextArea();
+        txtSituacao = new javax.swing.JTextArea();
         lblDescriscaoMotivo = new javax.swing.JLabel();
         lblDataPedido = new javax.swing.JLabel();
         txtDataPedido = new javax.swing.JFormattedTextField();
@@ -185,6 +222,9 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
             }
         });
 
+        lblNomeTitularAtivo.setFont(new java.awt.Font("Ubuntu", 1, 14)); // NOI18N
+        lblNomeTitularAtivo.setForeground(new java.awt.Color(13, 168, 250));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -220,11 +260,11 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Motivo da Averiguação"));
 
-        txtDescricaoMotivo.setColumns(20);
-        txtDescricaoMotivo.setRows(5);
-        jScrollPane1.setViewportView(txtDescricaoMotivo);
+        txtSituacao.setColumns(20);
+        txtSituacao.setRows(5);
+        jScrollPane1.setViewportView(txtSituacao);
 
-        lblDescriscaoMotivo.setText("Descrissão do Motivo:");
+        lblDescriscaoMotivo.setText("Situação");
 
         lblDataPedido.setText("Data do Pedido:");
 
@@ -275,12 +315,7 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
 
         lblDescricaoResultado.setText("Descrição:");
 
-        cmbDecisaoAveriguacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bloquear recebimento do benefício", "Cadastro de acordo com o informado", " " }));
-        cmbDecisaoAveriguacao.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbDecisaoAveriguacaoActionPerformed(evt);
-            }
-        });
+        cmbDecisaoAveriguacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione", "Recadastrar", "Bloquear ", "Cancelar ", "Suspender " }));
 
         lblDataResultado.setText("Data do Resultado:");
 
@@ -395,7 +430,7 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
         String titulo = "Pesquisar Pedidos de Averiguações Cadastrados";
         int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
         if (resposta == JOptionPane.YES_OPTION) {
-            limparCamposTela();
+            this.limparCamposTela();
             if(this.consultaResultado == null){
                 consultaResultado = new ConsultaResultadoAveriguacaoForm();
             }
@@ -432,10 +467,10 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
             this.recuperarCamposTela();
             if(this.acaoTela == 0){
                 resultadoAveriguacaoBO.inserir(this.resultadoAveriguacao);
-                JOptionPane.showMessageDialog(this, "Usuario cadastrado com sucesso!", "Cadastro de usuario", JOptionPane.INFORMATION_MESSAGE);
-            }else{    
+                JOptionPane.showMessageDialog(this, "Resultaod cadastrado com sucesso!", "Cadastro de usuario", JOptionPane.INFORMATION_MESSAGE);
+            }else if(this.acaoTela == 1){    
                 resultadoAveriguacaoBO.atualizar(this.resultadoAveriguacao);           
-                JOptionPane.showMessageDialog(this, "Cadasdatro atualizado com sucesso!", "Editar de usuario", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Resultado atualizado com sucesso!", "Editar de usuario", JOptionPane.INFORMATION_MESSAGE);
             } 
             this.limparCamposTela();
         }catch(SistemaAveriguacaoException sae){
@@ -448,21 +483,19 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
         }    
     }//GEN-LAST:event_btnSalvarActionPerformed
 
-    private void cmbDecisaoAveriguacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDecisaoAveriguacaoActionPerformed
-        
-    }//GEN-LAST:event_cmbDecisaoAveriguacaoActionPerformed
-
     private void btnVerificarNisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerificarNisActionPerformed
        try {
             BeneficiarioBO beneficiarioBO= new BeneficiarioBO();
-            beneficiario = beneficiarioBO.buscarByNis(lerNisTitular());
+            String nis = this.lerNisTitular();
+            ResultadoAveriguacaoBO resultadoAveriguacaoBO = new ResultadoAveriguacaoBO();
+            this.pedidoAveriguacao = resultadoAveriguacaoBO.verificarPedidoAveriguacaoExistente(nis);
             this.setNomeBeneficiarioTela();
-        } catch (CampoObrigatorioException cve) {
-            JOptionPane.showMessageDialog(this, cve.getMessage(), "Consultar Beneficiario", JOptionPane.ERROR_MESSAGE);
+            this.inicializarCamposPedidoTela();
+       } catch (SistemaAveriguacaoException se) {
+            JOptionPane.showMessageDialog(this, se.getMessage(), "Consultar Beneficiario", JOptionPane.ERROR_MESSAGE);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Não foi possivel consultar o beneficiário \nTente novamente", "Cadastro pedido de Averiguacao", JOptionPane.ERROR_MESSAGE);
         }
-        
     }//GEN-LAST:event_btnVerificarNisActionPerformed
 
     /**
@@ -527,12 +560,9 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
     private javax.swing.JPanel pnlResultadoAveriguacao;
     private javax.swing.JFormattedTextField txtDataPedido;
     private javax.swing.JFormattedTextField txtDataResultado;
-    private javax.swing.JTextArea txtDescricaoMotivo;
     private javax.swing.JTextArea txtDescricaoResultado;
     private javax.swing.JFormattedTextField txtNisTitular;
+    private javax.swing.JTextArea txtSituacao;
     // End of variables declaration//GEN-END:variables
 
-    private void limparCamposTela() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

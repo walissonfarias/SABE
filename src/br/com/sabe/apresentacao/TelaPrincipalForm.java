@@ -96,7 +96,6 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         btnLogin.setEnabled(true);
         btnAlterarSenha.setEnabled(false);
         btnConfirmarSenha.setEnabled(false);
-        mnuUsuarios.setEnabled(false);
         mnuBarMenuPrincipal.setVisible(false);
         //jInternalFrame1.setSize(555, 460);
         

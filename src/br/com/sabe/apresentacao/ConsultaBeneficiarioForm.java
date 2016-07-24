@@ -8,6 +8,7 @@ import br.com.sabe.entidade.Beneficiario;
 import br.com.sabe.entidade.Beneficio;
 import br.com.sabe.entidade.BeneficioAndBeneficiario;
 import br.com.sabe.entidade.Usuario;
+import br.com.sabe.excecao.CampoObrigatorioException;
 import br.com.sabe.negocio.BeneficiarioBO;
 import br.com.sabe.negocio.BeneficioAndBeneficiarioBO;
 import br.com.sabe.negocio.BeneficioBO;
@@ -15,6 +16,7 @@ import br.com.sabe.negocio.UsuarioBO;
 import br.com.sabe.persistencia.UsuarioDAO;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -57,7 +59,7 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
         this.beneficios = beneficioBO.buscarTodos();
 
         this.cmbBeneficios.removeAllItems();
-        
+        this.cmbBeneficios.addItem("Selecione");
         for(Beneficio beneficio: beneficios){
             this.cmbBeneficios.addItem(beneficio.getNome());
         }
@@ -76,6 +78,29 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
         ModeloTabelaBeneficiarios modelo = new ModeloTabelaBeneficiarios();
         tblBeneficiarios.setModel(modelo);
     }
+    public void filtarTabelaBeneficiarios() throws SQLException{
+        int beneficioSelecionado = this.cmbBeneficios.getSelectedIndex();
+        Beneficio beneficioFiltro = null;
+        BeneficioAndBeneficiarioBO beneficioAndBeneficiarioBO = new BeneficioAndBeneficiarioBO();
+        if (beneficioSelecionado > 0){    
+            for(Beneficio beneficio: beneficios){
+                beneficioFiltro = beneficios.get(beneficioSelecionado-1);
+                this.listaBeneficioAndBeneficiario = beneficioAndBeneficiarioBO.buscarByBeneficio(beneficioFiltro);
+            }           
+            ModeloTabelaBeneficiarios modelo = new ModeloTabelaBeneficiarios();
+            tblBeneficiarios.setModel(modelo);
+        }else if(!txtNis.getText().equals("")){ 
+            this.listaBeneficioAndBeneficiario = beneficioAndBeneficiarioBO.buscarByNis(this.txtNis.getText());                   
+            ModeloTabelaBeneficiarios modelo = new ModeloTabelaBeneficiarios();
+            tblBeneficiarios.setModel(modelo);
+        }else if(!txtNome.getText().equals("")){
+            this.listaBeneficioAndBeneficiario = beneficioAndBeneficiarioBO.buscarByNome(this.txtNome.getText());                   
+            ModeloTabelaBeneficiarios modelo = new ModeloTabelaBeneficiarios();
+            tblBeneficiarios.setModel(modelo);
+        }else{
+            throw new CampoObrigatorioException();     
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -92,10 +117,10 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
         btnEditar = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
         btnFechar = new javax.swing.JButton();
-        btnExcluir3 = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
         pnlFiltro = new javax.swing.JPanel();
-        lblMatricula = new javax.swing.JLabel();
-        txtMatricula = new javax.swing.JFormattedTextField();
+        lblNis = new javax.swing.JLabel();
+        txtNis = new javax.swing.JFormattedTextField();
         lblNome = new javax.swing.JLabel();
         txtNome = new javax.swing.JTextField();
         lblCurso = new javax.swing.JLabel();
@@ -168,11 +193,11 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
             }
         });
 
-        btnExcluir3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/rubbish7 (2).png"))); // NOI18N
-        btnExcluir3.setText("Excluir");
-        btnExcluir3.addActionListener(new java.awt.event.ActionListener() {
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/rubbish7 (2).png"))); // NOI18N
+        btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExcluir3ActionPerformed(evt);
+                btnExcluirActionPerformed(evt);
             }
         });
 
@@ -189,7 +214,7 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnExcluir3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -201,7 +226,7 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(pnlResultado2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlResultado2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnExcluir3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlResultado2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -211,9 +236,14 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
 
         pnlFiltro.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Filtro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 14))); // NOI18N
 
-        lblMatricula.setText("NIS do Beneficiario Titular:");
+        lblNis.setText("NIS do Beneficiario Titular:");
 
-        txtMatricula.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txtNis.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txtNis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNisActionPerformed(evt);
+            }
+        });
 
         lblNome.setText("Nome do Beneficiário Titular:");
 
@@ -221,6 +251,11 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
 
         btnFiltrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/spam-control-interface-symbol-of-outlined-filter.png"))); // NOI18N
         btnFiltrar.setText("Filtrar");
+        btnFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFiltrarActionPerformed(evt);
+            }
+        });
 
         cmbBeneficios.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -238,22 +273,22 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
                             .addGroup(pnlFiltroLayout.createSequentialGroup()
                                 .addGroup(pnlFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblCurso, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblMatricula))
+                                    .addComponent(lblNis))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())
                     .addGroup(pnlFiltroLayout.createSequentialGroup()
                         .addGroup(pnlFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNis, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblNome, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         pnlFiltroLayout.setVerticalGroup(
             pnlFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlFiltroLayout.createSequentialGroup()
-                .addComponent(lblMatricula)
+                .addComponent(lblNis)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtNis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblNome)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -299,36 +334,39 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
             cadastroBeneficiario  = new CadastroBeneficiarioForm();
         }
         cadastroBeneficiario.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         int linhaSelecionada = tblBeneficiarios.getSelectedRow();
-
         try {
             BeneficioAndBeneficiario beneficiarioSelecionado = listaBeneficioAndBeneficiario.get(linhaSelecionada);
-            CadastroBeneficiarioForm telaCadastro = new CadastroBeneficiarioForm(beneficiarioSelecionado);
-            telaCadastro.setVisible(true);           
+            CadastroBeneficiarioForm cadastroBeneficiarioForm = 
+                    new CadastroBeneficiarioForm(this, beneficiarioSelecionado);
+            cadastroBeneficiarioForm.setVisible(true);
+            this.dispose();
         } catch (ArrayIndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Selecione uma linha da tabela para poder editar alguma venda.",
-                    "Alteração de venda",
+                    "Selecione uma linha da tabela para poder editar os dados de um beneficiario.",
+                    "Editar Beneficiario",
                     JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnEditarActionPerformed
 
-    private void btnExcluir3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluir3ActionPerformed
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         int linhaSelecionada = tblBeneficiarios.getSelectedRow();
         try {
-            this.beneficiarioEmExclusao = beneficiarios.get(linhaSelecionada);
-            BeneficiarioBO beneficiarioBO = new BeneficiarioBO();               
-            String mensagem = "Deseja excluir beneficiario?";
+            this.beneficiarioEmExclusao = listaBeneficioAndBeneficiario.get(linhaSelecionada).getBeneficiario();
+            String mensagem = "Deseja excluir beneficiario? \n"
+                    + "OBS:Os dados cadastrados da averiguação também seram excluidos";
             String titulo = "Excluir Beneficiario";
             int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
             if (resposta == JOptionPane.YES_OPTION) {
-                BeneficioAndBeneficiarioBO benficioAndBeneficiarioBO = new BeneficioAndBeneficiarioBO();
-                benficioAndBeneficiarioBO.excluirBeneficiario(this.beneficiarioEmExclusao);   
-                JOptionPane.showMessageDialog(this, "Usuario excluido com sucesso!", "Excluir Usuario", JOptionPane.INFORMATION_MESSAGE);
+                BeneficiarioBO beneficiarioBO = new BeneficiarioBO();
+                beneficiarioBO.excluir(beneficiarioEmExclusao);
+                JOptionPane.showMessageDialog(this, "Beneficiario excluido com sucesso!", 
+                    "Excluir Beneficiario", JOptionPane.INFORMATION_MESSAGE);
                 carregarTabelaBeneficiarios();
             }
         } catch (SQLException ex) {
@@ -339,7 +377,22 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,e.getMessage(),"Selecione uma linha da tabela para poder excluir alguma venda.", 
                     JOptionPane.ERROR_MESSAGE);
         } 
-    }//GEN-LAST:event_btnExcluir3ActionPerformed
+    }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
+        try {
+            this.filtarTabelaBeneficiarios();
+        } catch (SQLException ex) {
+            String mensagem = null;
+                mensagem += "\nMensagem de erro:\n" + ex.getMessage();
+            JOptionPane.showMessageDialog(this, mensagem, "Filtar Beneficiario", JOptionPane.ERROR_MESSAGE);
+        }
+            
+    }//GEN-LAST:event_btnFiltrarActionPerformed
+
+    private void txtNisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNisActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNisActionPerformed
 
     /**
      * @param args the command line arguments
@@ -377,19 +430,19 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditar;
-    private javax.swing.JButton btnExcluir3;
+    private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnFiltrar;
     private javax.swing.JButton btnNovo;
     private javax.swing.JComboBox cmbBeneficios;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCurso;
-    private javax.swing.JLabel lblMatricula;
+    private javax.swing.JLabel lblNis;
     private javax.swing.JLabel lblNome;
     private javax.swing.JPanel pnlFiltro;
     private javax.swing.JPanel pnlResultado2;
     private javax.swing.JTable tblBeneficiarios;
-    private javax.swing.JFormattedTextField txtMatricula;
+    private javax.swing.JFormattedTextField txtNis;
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables
     private class ModeloTabelaBeneficiarios extends AbstractTableModel {
@@ -405,8 +458,6 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
             }else if (coluna == 3){                
                 return "Zona";
             }else if (coluna == 4){
-                return "Quantidade de Membros";
-            }else if (coluna == 5){
                 return "Renda Familiar";
             }else {
                 return "Renda Per Capta";
@@ -420,7 +471,7 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
 
         @Override
         public int getColumnCount() {
-            return 7;
+            return 6;
         }
 
         @Override
@@ -440,16 +491,12 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
                     return "Rural";
                 }                 
             }else if (coluna == 4){
-                return beneficioAndBeneficiario.getBeneficiario().getQtdeMembros();
-            }else if (coluna == 5){
                 DecimalFormat formatador = new DecimalFormat("#,##0.00");
                 return formatador.format(beneficioAndBeneficiario.getBeneficiario().getRendaFamiliar());
             }else {
                 DecimalFormat formatador = new DecimalFormat("#,##0.00");
                 return formatador.format(beneficioAndBeneficiario.getBeneficiario().getRendaPerCapta());
-            }
-            
+            }            
         }
-
     }
 }

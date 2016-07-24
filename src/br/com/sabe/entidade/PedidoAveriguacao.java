@@ -33,11 +33,11 @@ public class PedidoAveriguacao {
         this.dataPedido = dataPedido;
     }
 
-    public String getDescricao() {
+    public String getSituacao() {
         return descricao;
     }
 
-    public void setDescricao(String descricao) {
+    public void setSituacao(String descricao) {
         this.descricao = descricao;
     }
 

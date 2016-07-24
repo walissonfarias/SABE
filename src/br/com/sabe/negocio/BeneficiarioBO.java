@@ -11,6 +11,8 @@ import br.com.sabe.entidade.Beneficio;
 import br.com.sabe.entidade.BeneficioAndBeneficiario;
 import br.com.sabe.entidade.Usuario;
 import br.com.sabe.excecao.ArgumentoInvalidoException;
+import br.com.sabe.excecao.CampoObrigatorioException;
+import br.com.sabe.excecao.NisInvalidoException;
 import br.com.sabe.excecao.UsuarioLoginExistenteException;
 import br.com.sabe.persistencia.BeneficiarioDAO;
 import br.com.sabe.persistencia.BeneficioAndBeneficiarioDAO;
@@ -24,12 +26,18 @@ import java.util.List;
  * @author wff
  */
 public class BeneficiarioBO {
-    public void inserir(Beneficiario beneficiario,BeneficioAndBeneficiario BeneficioAndBeneficiario) throws SQLException{
+    public void inserir(Beneficiario beneficiario,BeneficioAndBeneficiario beneficioAndBeneficiario) throws SQLException{
+        this.validarNis(beneficiario.getNis());
         BeneficiarioDAO beneficiarioDAO = new BeneficiarioDAO();
         beneficiarioDAO.inserir(beneficiario);
-        BeneficioAndBeneficiario.setBeneficiario(buscarBeneficiario(beneficiario));
-        BeneficioAndBeneficiarioDAO beneficioAndBeneficiarioDAO = new BeneficioAndBeneficiarioDAO();
-        beneficioAndBeneficiarioDAO.inserir(BeneficioAndBeneficiario);
+        beneficioAndBeneficiario.setBeneficiario(buscarBeneficiario(beneficiario));
+        BeneficioAndBeneficiarioBO beneficioAndBeneficiarioBO = new BeneficioAndBeneficiarioBO();
+        beneficioAndBeneficiarioBO.inserir(beneficioAndBeneficiario);
+    }
+    public void validarNis(String nis){
+        if (nis.length() != 11 ) {
+            throw new NisInvalidoException("NIS inválido");
+        }
     }
     public void verificarUsuarioLogin(String login) throws SQLException{
         Usuario usuarioExistente = null;
@@ -65,13 +73,15 @@ public class BeneficiarioBO {
         BeneficioAndBeneficiarioDAO beneficioAndBeneficiarioDAO = new BeneficioAndBeneficiarioDAO();
         beneficioAndBeneficiarioDAO.buscarByBeneficiario();
     }*/
-    public void atualizarDados(Usuario usuario) throws SQLException {
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-        usuarioDAO.atualizarDados(usuario);
+    public void atualizar(Beneficiario beneficiario, BeneficioAndBeneficiario beneficioAndBeneficiario) throws SQLException {
+        BeneficiarioDAO beneficiarioDAO = new BeneficiarioDAO();
+        beneficiarioDAO.atualizar(beneficiario);
+        BeneficioAndBeneficiarioBO beneficioAndBeneficiarioBO = new BeneficioAndBeneficiarioBO();
+        beneficioAndBeneficiarioBO.atualizar(beneficioAndBeneficiario);
     }
 
-    public void excluirUsuario(Usuario usuario) throws SQLException {
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-        usuarioDAO.excluirUsuario(usuario);
+    public void excluir(Beneficiario beneficiario) throws SQLException {
+        BeneficiarioDAO beneficiarioDAO = new BeneficiarioDAO();
+        beneficiarioDAO.excluir(beneficiario);
     }
 }

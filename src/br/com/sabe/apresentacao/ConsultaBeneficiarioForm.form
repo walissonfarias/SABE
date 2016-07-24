@@ -71,7 +71,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnEditar" min="-2" pref="111" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="btnExcluir3" min="-2" pref="111" max="-2" attributes="0"/>
+                          <Component id="btnExcluir" min="-2" pref="111" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnFechar" min="-2" pref="111" max="-2" attributes="0"/>
                       </Group>
@@ -87,7 +87,7 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btnExcluir3" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                          <Component id="btnExcluir" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
                           <Component id="btnFechar" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
                       </Group>
                       <Group type="103" alignment="1" groupAlignment="3" attributes="0">
@@ -195,7 +195,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFecharActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnExcluir3">
+        <Component class="javax.swing.JButton" name="btnExcluir">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/br/com/sabe/apresentacao/icones/rubbish7 (2).png"/>
@@ -203,7 +203,7 @@
             <Property name="text" type="java.lang.String" value="Excluir"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExcluir3ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExcluirActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
@@ -232,7 +232,7 @@
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="lblCurso" alignment="0" min="-2" pref="85" max="-2" attributes="0"/>
-                                      <Component id="lblMatricula" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblNis" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
@@ -242,7 +242,7 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="btnFiltrar" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
-                              <Component id="txtMatricula" alignment="0" min="-2" pref="299" max="-2" attributes="0"/>
+                              <Component id="txtNis" alignment="0" min="-2" pref="299" max="-2" attributes="0"/>
                               <Component id="lblNome" alignment="0" min="-2" pref="218" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -254,9 +254,9 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="lblMatricula" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblNis" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="txtMatricula" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtNis" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="lblNome" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -272,17 +272,20 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="lblMatricula">
+        <Component class="javax.swing.JLabel" name="lblNis">
           <Properties>
             <Property name="text" type="java.lang.String" value="NIS do Beneficiario Titular:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtMatricula">
+        <Component class="javax.swing.JFormattedTextField" name="txtNis">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
               <Format format="#0" subtype="-1" type="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtNisActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblNome">
           <Properties>
@@ -303,6 +306,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Filtrar"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFiltrarActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="cmbBeneficios">
           <Properties>

@@ -21,15 +21,17 @@ import java.util.List;
  */
 public class BeneficiarioDAO {
     private static final String SQL_INSERT = "INSERT INTO BENEFICIARIO ( NIS, NOME, RUA, NUMERO, BAIRRO, ZONA, LOCALIDADE, "
-            + "QTDE_MEMBROS, RENDA_FAMILIAR, RENDA_PER_CAPTA )VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+            + " RENDA_FAMILIAR, RENDA_PER_CAPTA )VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? )";
     private static final String SQL_BUSCAR_BY_NIS = "SELECT*FROM BENEFICIARIO WHERE NIS=?";
     private static final String SQL_BUSCAR_BENEFICIARIO_BY_BENEFICIO = "SELECT BRIO.ID, BRIO.NIS, BRIO.RUA, BRIO.NUMERO, BRIO.BAIRRO, BRIO.ZONA,\n"
-            + "BRIO.LOCALIDADE, BRIO.QTDE_MEMBROS, BRIO.RENDA_FAMILIAR, \n"
+            + "BRIO.LOCALIDADE, BRIO.RENDA_FAMILIAR, \n"
             + "BRIO.RENDA_PER_CAPTA, B.NOME, B.DESCRISSAO, B.VALOR FROM BENEFICIARIO BRIO \n"
             + "JOIN BENEFICIO_BENEFICIARIO BB ON BRIO.ID = BB.ID_BENEFICIARIO \n"
             + "JOIN BENEFICIO B ON BB.ID_BENEFICIO=B.ID;";
     private static final String SQL_BUSCAR_TODOS = "SELECT*FROM BENEFICIARIO";
-    private static final String SQL_EXCLUIR = "DELETE FROM BENEFICIO WHERE NOME= ? "; 
+    private static final String SQL_EXCLUIR = "DELETE FROM BENEFICIARIO WHERE NIS = ? ";
+    private static final String SQL_UPDATE = "UPDATE BENEFICIARIO SET NIS=?, NOME=?, RUA=?, NUMERO=?, BAIRRO=?, ZONA=?, LOCALIDADE=?, "
+            + " RENDA_FAMILIAR=?, RENDA_PER_CAPTA=? WHERE ID = ?";
     
     public void inserir(Beneficiario beneficiario) throws SQLException{
         Connection conexao = null;
@@ -45,9 +47,8 @@ public class BeneficiarioDAO {
             comando.setString(5, beneficiario.getBairro());
             comando.setString(6, beneficiario.getZona());
             comando.setString(7, beneficiario.getLocalidade());
-            comando.setInt(8, beneficiario.getQtdeMembros());
-            comando.setDouble(9, beneficiario.getRendaFamiliar());
-            comando.setDouble(10, beneficiario.getRendaPerCapta());
+            comando.setDouble(8, beneficiario.getRendaFamiliar());
+            comando.setDouble(9, beneficiario.getRendaPerCapta());
             comando.execute();
             conexao.commit();
         }catch(Exception e){
@@ -123,10 +124,65 @@ public class BeneficiarioDAO {
         beneficiario.setBairro(resultado.getString(6));
         beneficiario.setZona(resultado.getString(7));
         beneficiario.setLocalidade(resultado.getString(8));
-        beneficiario.setQtdeMembros(resultado.getInt(9));
-        beneficiario.setRendaFamiliar(resultado.getDouble(10));
-        beneficiario.setRendaPerCapta(resultado.getDouble(11));
+        beneficiario.setRendaFamiliar(resultado.getDouble(9));
+        beneficiario.setRendaPerCapta(resultado.getDouble(10));
         return beneficiario;
+    }
+    public void atualizar(Beneficiario beneficiario) throws SQLException{
+        PreparedStatement comando = null;
+        Connection conexao = null;    
+        try{
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_UPDATE);
+            comando.setString(1, beneficiario.getNis());
+            comando.setString(2, beneficiario.getNome());
+            comando.setString(3, beneficiario.getRua());
+            comando.setInt(4, beneficiario.getNumero());
+            comando.setString(5, beneficiario.getBairro());
+            comando.setString(6, beneficiario.getZona());
+            comando.setString(7, beneficiario.getLocalidade());
+            comando.setDouble(8, beneficiario.getRendaFamiliar());
+            comando.setDouble(9, beneficiario.getRendaPerCapta());
+            comando.setInt(10, beneficiario.getId());
+            comando.execute();
+            conexao.commit();
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+            throw new RuntimeException();
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+    }
+    public void excluir(Beneficiario beneficiario) throws SQLException{
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        
+        try {
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_EXCLUIR);
+            comando.setString(1, beneficiario.getNis());
+            comando.execute();
+            conexao.commit();
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
     }
 
 }

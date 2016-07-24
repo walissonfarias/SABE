@@ -20,7 +20,15 @@ import java.util.List;
  */
 public class PedidoAveriguacaoDAO {
     private static final String SQL_INSERT = "INSERT INTO PEDIDO(DATA_PEDIDO, SITUACAO, ID_BENEFICIARIO)VALUES(?, ?,?)";
-    private static final String SQL_BUSCAR_TODOS = "SELECT*FROM BENEFICIARIO B JOIN PEDIDO P ON B.ID=P.ID_BENEFICIARIO"; 
+    private static final String SQL_UPDATE = "UPDATE PEDIDO SET DATA_PEDIDO=?, SITUACAO=? WHERE ID= ?";
+    private static final String SQL_BUSCAR_BY_NIS = "SELECT BRIO.ID, BRIO.NIS, BRIO.NOME,BRIO.ZONA, BRIO.LOCALIDADE, "
+            + "BRIO.BAIRRO,BRIO.RUA, BRIO.NUMERO, BRIO.RENDA_FAMILIAR,BRIO.RENDA_PER_CAPTA,P.ID, P.DATA_PEDIDO, P.SITUACAO "
+            + "FROM BENEFICIARIO BRIO JOIN PEDIDO P ON BRIO.ID=P.ID_BENEFICIARIO WHERE BRIO.NIS=?";
+    private static final String SQL_BUSCAR_TODOS = "SELECT BRIO.ID, BRIO.NIS, BRIO.NOME,BRIO.ZONA, BRIO.LOCALIDADE, "
+            + "BRIO.BAIRRO,BRIO.RUA, BRIO.NUMERO, BRIO.RENDA_FAMILIAR,BRIO.RENDA_PER_CAPTA,P.ID, P.DATA_PEDIDO, P.SITUACAO "
+            + "FROM BENEFICIARIO BRIO JOIN PEDIDO P ON BRIO.ID=P.ID_BENEFICIARIO"; 
+    public static final String SQL_EXCLUIR = "DELETE FROM PEDIDO WHERE ID=?";
+    
     public void inserir(PedidoAveriguacao pedidoAveriguacao) throws SQLException{
         Connection conexao = null;
         PreparedStatement comando = null;
@@ -30,7 +38,7 @@ public class PedidoAveriguacaoDAO {
             comando = conexao.prepareStatement(SQL_INSERT);
             java.sql.Date dataSql = new java.sql.Date(pedidoAveriguacao.getDataPedido().getTime());
             comando.setDate(1, dataSql);
-            comando.setString(2, pedidoAveriguacao.getDescricao());
+            comando.setString(2, pedidoAveriguacao.getSituacao());
             comando.setInt(3, pedidoAveriguacao.beneficiario.getId());
             comando.execute();
             conexao.commit();
@@ -50,11 +58,11 @@ public class PedidoAveriguacaoDAO {
         
         try{
             conexao = BancoDadosUtil.getConnection();
-            comando = conexao.prepareStatement(SQL_INSERT);
+            comando = conexao.prepareStatement(SQL_UPDATE);
             java.sql.Date dataSql = new java.sql.Date(pedidoAveriguacao.getDataPedido().getTime());
             comando.setDate(1, dataSql);
-            comando.setString(2, pedidoAveriguacao.getDescricao());
-            comando.setInt(3, pedidoAveriguacao.beneficiario.getId());
+            comando.setString(2, pedidoAveriguacao.getSituacao());
+            comando.setInt(3, pedidoAveriguacao.getId());
             comando.execute();
             conexao.commit();
         }catch(Exception e){
@@ -67,12 +75,35 @@ public class PedidoAveriguacaoDAO {
         }
         
     }
+    public List<PedidoAveriguacao> buscarPedidoByNis(String nis) throws SQLException{
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+        List<PedidoAveriguacao> listaPedidoAveriguacao = new ArrayList();
+        try{
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_BUSCAR_BY_NIS);
+            comando.setString(1, nis);
+            resultado = comando.executeQuery();
+            //O método next retornar boolean informando se existe um próximo
+            //elemento para iterar
+            while (resultado.next()) {
+                PedidoAveriguacao pedidoAveriguacao = this.extrairLinhaResultado(resultado);
+                //Adiciona um item à lista que será retornada
+                listaPedidoAveriguacao.add(pedidoAveriguacao);
+            }
+        } finally {
+            //Todo objeto que referencie o banco de dados deve ser fechado
+            BancoDadosUtil.fecharChamadasBancoDados(conexao, comando, resultado);
+        }
+        return listaPedidoAveriguacao;
+    }    
     public List<PedidoAveriguacao> buscarTodos() throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;
         ResultSet resultado = null;
 
-        List<PedidoAveriguacao> listaPedidoAveriguacao = new ArrayList();
+        List<PedidoAveriguacao> listaPedidoAveriguacao = new ArrayList<>();
 
         try {
             //Recupera a conexão
@@ -98,19 +129,45 @@ public class PedidoAveriguacaoDAO {
         //Instancia um novo objeto e atribui os valores vindo do BD
         //(Note que no BD o index inicia por 1)
         PedidoAveriguacao pedidoAveriguacao = new PedidoAveriguacao(); 
-        pedidoAveriguacao.setId(resultado.getInt(1));
-        pedidoAveriguacao.setDescricao(resultado.getString(2));
-        pedidoAveriguacao.beneficiario.setId(resultado.getInt(3));
-        pedidoAveriguacao.beneficiario.setNis(resultado.getString(4));
-        pedidoAveriguacao.beneficiario.setNome(resultado.getString(5));
-        pedidoAveriguacao.beneficiario.setRua(resultado.getString(6));
-        pedidoAveriguacao.beneficiario.setNumero(resultado.getInt(7));
-        pedidoAveriguacao.beneficiario.setBairro(resultado.getString(8));
-        pedidoAveriguacao.beneficiario.setZona(resultado.getString(9));
-        pedidoAveriguacao.beneficiario.setLocalidade(resultado.getString(10));
-        pedidoAveriguacao.beneficiario.setQtdeMembros(resultado.getInt(11));
-        pedidoAveriguacao.beneficiario.setRendaFamiliar(resultado.getDouble(12));
-        pedidoAveriguacao.beneficiario.setRendaPerCapta(resultado.getDouble(13));
+        Beneficiario beneficiario = new Beneficiario();
+        beneficiario.setId(resultado.getInt(1));
+        beneficiario.setNis(resultado.getString(2));
+        beneficiario.setNome(resultado.getString(3));
+        beneficiario.setZona(resultado.getString(4));
+        beneficiario.setLocalidade(resultado.getString(5));
+        beneficiario.setBairro(resultado.getString(6));
+        beneficiario.setRua(resultado.getString(7));
+        beneficiario.setNumero(resultado.getInt(8));
+        beneficiario.setRendaFamiliar(resultado.getDouble(9));
+        beneficiario.setRendaPerCapta(resultado.getDouble(10));
+        pedidoAveriguacao.setId(resultado.getInt(11));
+        pedidoAveriguacao.setDataPedido(resultado.getTimestamp(12));
+        pedidoAveriguacao.setSituacao(resultado.getString(13));
+        pedidoAveriguacao.setBeneficiario(beneficiario);
         return pedidoAveriguacao;
+    }
+    public void excluir(PedidoAveriguacao pedidoAveriguacao) throws SQLException{
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        
+        try {
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_EXCLUIR);
+            comando.setInt(1, pedidoAveriguacao.getId());
+            comando.execute();
+            conexao.commit();
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
     }
 }

@@ -238,6 +238,14 @@
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="lblNomeTitularAtivo">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Ubuntu" size="14" style="1"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="fa" green="a8" red="d" type="rgb"/>
+                </Property>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
@@ -302,7 +310,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTextArea" name="txtDescricaoMotivo">
+                <Component class="javax.swing.JTextArea" name="txtSituacao">
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
@@ -312,7 +320,7 @@
             </Container>
             <Component class="javax.swing.JLabel" name="lblDescriscaoMotivo">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Descriss&#xe3;o do Motivo:"/>
+                <Property name="text" type="java.lang.String" value="Situa&#xe7;&#xe3;o"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblDataPedido">
@@ -418,16 +426,15 @@
             <Component class="javax.swing.JComboBox" name="cmbDecisaoAveriguacao">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="3">
-                    <StringItem index="0" value="Bloquear recebimento do benef&#xed;cio"/>
-                    <StringItem index="1" value="Cadastro de acordo com o informado"/>
-                    <StringItem index="2" value=" "/>
+                  <StringArray count="5">
+                    <StringItem index="0" value="Selecione"/>
+                    <StringItem index="1" value="Recadastrar"/>
+                    <StringItem index="2" value="Bloquear "/>
+                    <StringItem index="3" value="Cancelar "/>
+                    <StringItem index="4" value="Suspender "/>
                   </StringArray>
                 </Property>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmbDecisaoAveriguacaoActionPerformed"/>
-              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>

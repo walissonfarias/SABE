@@ -18,7 +18,6 @@ public class Beneficiario {
     private String bairro;
     private String zona;
     private String localidade;
-    private int qtdeMembros;
     private double rendaFamiliar;
     private double rendaPerCapta;
 
@@ -84,14 +83,6 @@ public class Beneficiario {
 
     public void setLocalidade(String localidade) {
         this.localidade = localidade;
-    }
-
-    public int getQtdeMembros() {
-        return qtdeMembros;
-    }
-
-    public void setQtdeMembros(int qtdeMembros) {
-        this.qtdeMembros = qtdeMembros;
     }
 
     public double getRendaFamiliar() {

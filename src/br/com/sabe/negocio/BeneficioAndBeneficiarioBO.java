@@ -5,6 +5,7 @@
  */
 package br.com.sabe.negocio;
 
+import br.com.sabe.entidade.Beneficiario;
 import br.com.sabe.entidade.Beneficio;
 import br.com.sabe.entidade.BeneficioAndBeneficiario;
 import br.com.sabe.persistencia.BeneficioAndBeneficiarioDAO;
@@ -15,29 +16,30 @@ import java.util.List;
  *
  * @author walisson
  */
-public class BeneficioAndBeneficiarioBO {   
+public class BeneficioAndBeneficiarioBO  {   
+    public void inserir(BeneficioAndBeneficiario beneficioAndBeneficiario) throws SQLException{
+        BeneficioAndBeneficiarioDAO beneficioAndBeneficiarioDAO = new BeneficioAndBeneficiarioDAO();
+        beneficioAndBeneficiarioDAO.inserir(beneficioAndBeneficiario);
+    }
     public List<BeneficioAndBeneficiario> buscarTodosBeneficioAndBeneficiario() throws SQLException{
-        Beneficio beneficioExistente = null;
         BeneficioAndBeneficiarioDAO beneficioAndBeneficiarioDAO = new BeneficioAndBeneficiarioDAO();
-        return beneficioAndBeneficiarioDAO.buscarBeneficiarioByBeneficio();       
+        return beneficioAndBeneficiarioDAO.buscarBeneficiarioAndBeneficio();       
     }
-    public List<BeneficioAndBeneficiario> buscarByNis() throws SQLException{
-        Beneficio beneficioExistente = null;
+    public List<BeneficioAndBeneficiario> buscarByBeneficio(Beneficio beneficio) throws SQLException{
         BeneficioAndBeneficiarioDAO beneficioAndBeneficiarioDAO = new BeneficioAndBeneficiarioDAO();
-        return beneficioAndBeneficiarioDAO.buscarBeneficiarioByBeneficio();       
+        return beneficioAndBeneficiarioDAO.buscarByBeneficio(beneficio);       
     }
-    public void excluirBeneficioAndBeneficiario(){
-        
+    public List<BeneficioAndBeneficiario> buscarByNis(String nis) throws SQLException{
+        BeneficioAndBeneficiarioDAO beneficioAndBeneficiarioDAO = new BeneficioAndBeneficiarioDAO();
+        return beneficioAndBeneficiarioDAO.buscarByNis(nis);       
     }
-    public void excluirBeneficio(){
+    public List<BeneficioAndBeneficiario> buscarByNome(String nome) throws SQLException{
         BeneficioAndBeneficiarioDAO beneficioAndBeneficiarioDAO = new BeneficioAndBeneficiarioDAO();
-        beneficioAndBeneficiarioDAO.excluirBeneficio();
-        this.excluirBeneficiario(){
-        
-        }
-    }   
-    public void excluirBeneficiario(){
+        return beneficioAndBeneficiarioDAO.buscarByNome(nome);       
+    }
+    public void atualizar(BeneficioAndBeneficiario beneficioAndBeneficiario) throws SQLException{
         BeneficioAndBeneficiarioDAO beneficioAndBeneficiarioDAO = new BeneficioAndBeneficiarioDAO();
-        beneficioAndBeneficiarioDAO.excluirBeneficario(){
+        beneficioAndBeneficiarioDAO.excluirBeneficioByBeneficiario(beneficioAndBeneficiario);
+        beneficioAndBeneficiarioDAO.inserir(beneficioAndBeneficiario);
     }
 }

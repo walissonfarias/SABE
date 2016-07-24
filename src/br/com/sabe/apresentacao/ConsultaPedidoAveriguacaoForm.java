@@ -10,6 +10,7 @@ import br.com.sabe.negocio.PedidoAveriguacaoBO;
 import br.com.sabe.negocio.UsuarioBO;
 import br.com.sabe.persistencia.UsuarioDAO;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,6 +24,7 @@ import javax.swing.table.AbstractTableModel;
 public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
     CadastroPedidoAveriguacaoForm cadastroPedidoAveriguacao = null;
     List<PedidoAveriguacao> listaPedidoAveriguacao = new ArrayList<>();
+    PedidoAveriguacao pedidoEmExclusao;
     /**
      * Creates new form ConsultarPedidoAveriguacao
      */
@@ -33,7 +35,7 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
         try {
             this.initComponents();
             this.carregarTabelaPedidoAveriguacao();
-            this.carregarComboLocalidade();
+            //this.carregarComboLocalidade();
         } catch (Exception e) {
             String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
             mensagem += "\nMensagem de erro:\n" + e.getMessage();
@@ -58,7 +60,7 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
         ModeloTabelaPedidoAveriguacao modelo = new ModeloTabelaPedidoAveriguacao();
         tblPedidoAveriguacao.setModel(modelo);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -74,7 +76,7 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
         btnEditar = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
         btnFechar = new javax.swing.JButton();
-        btnExcluir3 = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
         pnlFiltro = new javax.swing.JPanel();
         lblMatricula = new javax.swing.JLabel();
         txtMatricula = new javax.swing.JFormattedTextField();
@@ -122,8 +124,13 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
             }
         });
 
-        btnExcluir3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/rubbish7 (2).png"))); // NOI18N
-        btnExcluir3.setText("Excluir");
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/rubbish7 (2).png"))); // NOI18N
+        btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlResultado2Layout = new javax.swing.GroupLayout(pnlResultado2);
         pnlResultado2.setLayout(pnlResultado2Layout);
@@ -138,7 +145,7 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
-                        .addComponent(btnExcluir3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -153,7 +160,7 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
                         .addGroup(pnlResultado2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlResultado2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btnExcluir3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(6, 6, 6))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlResultado2Layout.createSequentialGroup()
@@ -247,7 +254,33 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
             cadastroPedidoAveriguacao  = new CadastroPedidoAveriguacaoForm();
         }
         cadastroPedidoAveriguacao.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnNovoActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        int linhaSelecionada = tblPedidoAveriguacao.getSelectedRow();
+        try {
+            this.pedidoEmExclusao = listaPedidoAveriguacao.get(linhaSelecionada);
+            PedidoAveriguacaoBO pedidoAveriguacaoBO= new PedidoAveriguacaoBO();
+            String mensagem = "Deseja excluir beneficio?\n"
+                    + "Obs: Caso o pedido possua resultado da averiguação o mesmo tambêm será excluido";
+            String titulo = "Excluir pedido Averiguação";
+            int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
+            if (resposta == JOptionPane.YES_OPTION) {
+                pedidoAveriguacaoBO.excluir(this.pedidoEmExclusao); 
+                JOptionPane.showMessageDialog(this, "Pedido de Averiguação excluido com sucesso!", "Excluir Beneficicio", JOptionPane.INFORMATION_MESSAGE);
+                carregarTabelaPedidoAveriguacao();
+            }
+        } catch (SQLException ex) {
+            String mensagem = null;
+                mensagem += "\nMensagem de erro:\n" + ex.getMessage();
+            JOptionPane.showMessageDialog(this, mensagem, "Excluir Usuario", JOptionPane.ERROR_MESSAGE);
+        }catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Selecione uma linha da tabela para poder excluir alguma venda.",
+                    "Exclusão de venda",JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -293,7 +326,7 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditar;
-    private javax.swing.JButton btnExcluir3;
+    private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnFiltrar;
     private javax.swing.JButton btnNovo;
@@ -317,12 +350,14 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
             }  else if (coluna == 1) {
                 return "Nome";
             } else if (coluna == 2){                
-                return "Localidade";
+                return "Data do Pedido";
             } else if (coluna == 3){
                 return "Situação";
-            }else{
-                return "Quantidade de membros";
-            }
+            } else if (coluna == 4){
+                return "Zona";
+            } else {
+                return "Localidade";
+            }                    
         }
 
         @Override
@@ -332,22 +367,25 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
 
         @Override
         public int getColumnCount() {
-            return 5;
+            return 6;
         }
 
         @Override
         public Object getValueAt(int linha, int coluna) {
             PedidoAveriguacao pedidoAveriguacao= listaPedidoAveriguacao.get(linha);
             if (coluna == 0) {
-                return pedidoAveriguacao.beneficiario.getNis();
+                return pedidoAveriguacao.getBeneficiario().getNis();
             } else if (coluna == 1) {
-                return pedidoAveriguacao.beneficiario.getNome();
+                return pedidoAveriguacao.getBeneficiario().getNome();
             } else if (coluna == 2){ 
-                return pedidoAveriguacao.beneficiario.getLocalidade();
-            } else if (coluna == 3){
-                return pedidoAveriguacao.getDescricao();
+                SimpleDateFormat formatador= new SimpleDateFormat("dd/MM/yyyy");
+                return formatador.format(pedidoAveriguacao.getDataPedido());
+            }else if (coluna == 3){ 
+                return pedidoAveriguacao.getSituacao();
+            } else  if (coluna == 4){
+                return pedidoAveriguacao.getBeneficiario().getZona();
             }else{
-                return pedidoAveriguacao.beneficiario.getQtdeMembros();
+                return pedidoAveriguacao.getBeneficiario().getLocalidade();
             }
         }
 

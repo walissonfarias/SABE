@@ -17,7 +17,7 @@ import javax.swing.table.AbstractTableModel;
  * @author walisson
  */
 public class ConsultaBeneficioForm extends javax.swing.JFrame {
-    CadastroUsuarioForm cadastroUsuario;
+    CadastroBeneficioForm cadastroBeneficio = null;
     List<Beneficio> beneficios;
     Beneficio beneficioEmEdicao;
     Beneficio beneficioEmExclusao;
@@ -30,16 +30,16 @@ public class ConsultaBeneficioForm extends javax.swing.JFrame {
     public void prepararTela(){
         try {
             this.initComponents();
-            this.carregarTabelaUsuarios();
+            this.carregarTabelaBeneficios();
         } catch (Exception e) {
             String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
             mensagem += "\nMensagem de erro:\n" + e.getMessage();
-            JOptionPane.showMessageDialog(this, mensagem, "Pesquisar Usuarios", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, mensagem, "Pesquisar Beneficios", JOptionPane.ERROR_MESSAGE);
             this.dispose();
         }
     }
     
-    public void carregarTabelaUsuarios() throws SQLException {
+    public void carregarTabelaBeneficios() throws SQLException {
         BeneficioBO beneficioBO = new BeneficioBO();
         this.beneficios = beneficioBO.buscarTodos();
 
@@ -172,11 +172,11 @@ public class ConsultaBeneficioForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        if(cadastroUsuario == null){
-            cadastroUsuario = new CadastroUsuarioForm();
+        if(this.cadastroBeneficio == null){
+            this.cadastroBeneficio = new CadastroBeneficioForm();
         }
-        cadastroUsuario.setVisible(true);
-        cadastroUsuario.toFront();
+        this.cadastroBeneficio.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
@@ -184,13 +184,13 @@ public class ConsultaBeneficioForm extends javax.swing.JFrame {
         try {
             this.beneficioEmExclusao = beneficios.get(linhaSelecionada);
             BeneficioBO beneficioBO = new BeneficioBO();               
-            String mensagem = "Deseja excluir usuario?";
-            String titulo = "Excluir Usuario";
+            String mensagem = "Deseja excluir beneficio?";
+            String titulo = "Excluir beneficio";
             int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
             if (resposta == JOptionPane.YES_OPTION) {
-                beneficioBO.excluirBeneficio(this.beneficioEmExclusao);   
-                JOptionPane.showMessageDialog(this, "Usuario excluido com sucesso!", "Excluir Usuario", JOptionPane.INFORMATION_MESSAGE);
-                carregarTabelaUsuarios();
+                beneficioBO.excluirBeneficio(this.beneficioEmExclusao); 
+                JOptionPane.showMessageDialog(this, "Beneficios e beneficiarios excluido com sucesso!", "Excluir Beneficicio", JOptionPane.INFORMATION_MESSAGE);
+                carregarTabelaBeneficios();
             }
         } catch (SQLException ex) {
             String mensagem = null;
@@ -212,6 +212,7 @@ public class ConsultaBeneficioForm extends javax.swing.JFrame {
             CadastroBeneficioForm telaCadastro = 
                     new CadastroBeneficioForm(beneficioSelecionado);
             telaCadastro.setVisible(true);
+            this.dispose();
             
         } catch (ArrayIndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(

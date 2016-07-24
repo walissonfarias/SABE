@@ -27,25 +27,30 @@ import javax.swing.JOptionPane;
 public class CadastroBeneficiarioForm extends javax.swing.JFrame {
     List<Beneficio> beneficios = new ArrayList<>();
     Beneficiario beneficiario;
-    Beneficiario beneficiarioEmEdicao;
-    BeneficioAndBeneficiario BeneficioAndBeneficiario;
-    BeneficioAndBeneficiario BeneficioAndBeneficiarioEmEdicao;
+    Beneficio beneficio;
+    BeneficioAndBeneficiario beneficioAndBeneficiario = new BeneficioAndBeneficiario() ;
     ConsultaBeneficiarioForm consultaBeneficiarioForm = null;
     CadastroPedidoAveriguacaoForm cadastroPedidoAveriguacaoForm = null;
-    int acaoTela = 0;
+    int acaoTela;
     /**
      * Creates new form CadastroBeneficiarioForm
      */
     public CadastroBeneficiarioForm() {
-        beneficiario = new Beneficiario();
-        BeneficioAndBeneficiario = new BeneficioAndBeneficiario();
+        this.acaoTela = 0;
+        this.beneficiario = new Beneficiario();
+        this.beneficio = new Beneficio();
+        this.beneficioAndBeneficiario = new BeneficioAndBeneficiario();
+        BeneficioAndBeneficiario beneficioAndBeneficiario= new BeneficioAndBeneficiario();
         prepararTela();
     }
     
-    public CadastroBeneficiarioForm(BeneficioAndBeneficiario beneficioAndBeneficiario){
-        acaoTela = 1;
-        this.beneficiario = beneficiario;
-        this.BeneficioAndBeneficiario = beneficioAndBeneficiario;
+    public CadastroBeneficiarioForm(ConsultaBeneficiarioForm consultaBeneficiarioForm,
+            BeneficioAndBeneficiario beneficioAndBeneficiario){
+        this.acaoTela = 1;
+        this.beneficio = beneficioAndBeneficiario.getBeneficio();
+        this.beneficiario = beneficioAndBeneficiario.getBeneficiario();
+        this.consultaBeneficiarioForm = consultaBeneficiarioForm;
+        this.beneficioAndBeneficiario = new BeneficioAndBeneficiario();
         this.prepararTela();
     }
     public void prepararTela(){
@@ -54,6 +59,7 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
             this.carregarComboBeneficios();
             if(acaoTela == 1){
                 this.inicializarCamposTela();
+                this.txtNis.setEnabled(false);
             }
         } catch (Exception e) {
             String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
@@ -75,7 +81,7 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
     public void inicializarCamposTela() throws ParseException{
         this.txtNome.setText(beneficiario.getNome());
         this.txtNis.setText(beneficiario.getNis());
-        cmbBeneficios.setSelectedItem(BeneficioAndBeneficiario.getBeneficio().getNome());
+        cmbBeneficios.setSelectedItem(beneficio.getNome());
         if(beneficiario.getZona().equals("R")){
             rdoRural.setSelected(true);
         }else if(beneficiario.getZona().equals("U")){
@@ -86,8 +92,7 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
         this.txtBairro.setText(beneficiario.getBairro());
         this.txtLocalidade.setText(beneficiario.getLocalidade());
         this.txtRua.setText(beneficiario.getRua());        
-        this.txtNumero.setText(Integer.toString(beneficiario.getNumero()));  
-        this.txtQtdeMembros.setText(Integer.toString(beneficiario.getQtdeMembros()));      
+        this.txtNumero.setText(Integer.toString(beneficiario.getNumero()));        
         this.txtRendaFamiliar.setText(String.valueOf(beneficiario.getRendaFamiliar()));
         this.txtRendaPerCapta.setText(String.valueOf(beneficiario.getRendaPerCapta()));
     }
@@ -96,9 +101,7 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
         this.beneficiario.setNis(txtNis.getText());
         int beneficioSelecionado = this.cmbBeneficios.getSelectedIndex();
         if (beneficioSelecionado > 0) {
-            for(Beneficio beneficio: beneficios){
-                this.BeneficioAndBeneficiario.setBeneficio(beneficios.get(beneficioSelecionado-1));
-            }
+                this.beneficio = beneficios.get(beneficioSelecionado-1);
         }else{
             throw new CampoObrigatorioException();     
         }
@@ -115,10 +118,6 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
         String strNumero = txtNumero.getText();  
         if(!strNumero.equals("")){
                 this.beneficiario.setNumero(Integer.parseInt(strNumero));
-        }
-        String strQtdeMembros = txtQtdeMembros.getText();
-        if(!strQtdeMembros.equals("")){
-                this.beneficiario.setQtdeMembros(Integer.parseInt(strQtdeMembros));
         }   
         String strRendaFamiliar = txtRendaFamiliar.getText();              
         if(!strRendaFamiliar.equals("")){
@@ -131,7 +130,9 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
             DecimalFormat formatador = new DecimalFormat("#,##0.00");
             Double rendaPerCapta = formatador.parse(strRendaPerCapta).doubleValue();
             this.beneficiario.setRendaPerCapta(rendaPerCapta);
-        }        
+        }      
+        this.beneficioAndBeneficiario.setBeneficio(this.beneficio);
+        this.beneficioAndBeneficiario.setBeneficiario(this.beneficiario);
     }
     public void limparCamposTela(){
         txtNome.setText("");
@@ -140,14 +141,13 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
         txtBairro.setText("");
         txtLocalidade.setText("");
         txtNumero.setText("");
-        txtQtdeMembros.setText("");
         txtRendaFamiliar.setText("");
         txtRendaPerCapta.setText("");
         txtRendaFamiliar.setText("");
         cmbBeneficios.setSelectedIndex(0);
         btnZona.clearSelection();
     }
-    public void validaCamposObrigracoes(){
+    public void validarCamposObrigratorios(){
         if(txtNome.getText().trim().isEmpty() ||
             txtLocalidade.getText().trim().isEmpty())
         {
@@ -207,8 +207,6 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
         lblRendaPerCapta = new javax.swing.JLabel();
         txtRendaFamiliar = new javax.swing.JTextField();
         txtRendaPerCapta = new javax.swing.JTextField();
-        lblQtdeMembrosFamilia = new javax.swing.JLabel();
-        txtQtdeMembros = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Tela de Cadastro de Beneficiário");
@@ -292,23 +290,24 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
                             .addComponent(lblRua, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblBairro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblLocalidade, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(39, 39, 39)
                         .addGroup(pnlEnderecoRuralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtBairro)
                             .addGroup(pnlEnderecoRuralLayout.createSequentialGroup()
-                                .addComponent(txtRua, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(13, 13, 13)
-                                .addComponent(lblNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtRua)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(txtLocalidade)))
+                                .addComponent(lblNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(26, 26, 26))
+                            .addComponent(txtLocalidade)
+                            .addComponent(txtBairro)))
                     .addGroup(pnlEnderecoRuralLayout.createSequentialGroup()
                         .addComponent(lblZona)
-                        .addGap(77, 77, 77)
+                        .addGap(101, 101, 101)
                         .addComponent(rdoRural)
-                        .addGap(18, 18, 18)
-                        .addComponent(rdoUrbano)))
+                        .addGap(65, 65, 65)
+                        .addComponent(rdoUrbano)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnlEnderecoRuralLayout.setVerticalGroup(
@@ -319,7 +318,7 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
                     .addComponent(lblZona)
                     .addComponent(rdoRural)
                     .addComponent(rdoUrbano))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                 .addGroup(pnlEnderecoRuralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblLocalidade)
                     .addComponent(txtLocalidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -375,32 +374,37 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
             .addGroup(pnlTitularDoBeneficioLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlTitularDoBeneficioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNis)
-                    .addComponent(lblNome))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlTitularDoBeneficioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlTitularDoBeneficioLayout.createSequentialGroup()
+                        .addGroup(pnlTitularDoBeneficioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNome)
+                            .addComponent(lblBeneficio))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnlTitularDoBeneficioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbBeneficios, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtNome)))
+                    .addGroup(pnlTitularDoBeneficioLayout.createSequentialGroup()
+                        .addComponent(lblNis)
+                        .addGap(20, 20, 20)
                         .addComponent(txtNis, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(22, 22, 22)
-                        .addComponent(lblBeneficio)
-                        .addGap(1, 1, 1)
-                        .addComponent(cmbBeneficios, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(txtNome))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnlTitularDoBeneficioLayout.setVerticalGroup(
             pnlTitularDoBeneficioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlTitularDoBeneficioLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(6, 6, 6)
                 .addGroup(pnlTitularDoBeneficioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNis)
-                    .addComponent(txtNis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblBeneficio)
-                    .addComponent(cmbBeneficios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlTitularDoBeneficioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNome))
                 .addGap(18, 18, 18)
                 .addGroup(pnlTitularDoBeneficioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNome)
-                    .addComponent(txtNome)))
+                    .addComponent(lblBeneficio)
+                    .addComponent(cmbBeneficios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         pnlRenda.setBorder(javax.swing.BorderFactory.createTitledBorder("Renda"));
@@ -421,48 +425,31 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
             }
         });
 
-        lblQtdeMembrosFamilia.setText("Quantidade de Mebros da Familia:");
-
-        txtQtdeMembros.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtQtdeMembrosActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout pnlRendaLayout = new javax.swing.GroupLayout(pnlRenda);
         pnlRenda.setLayout(pnlRendaLayout);
         pnlRendaLayout.setHorizontalGroup(
             pnlRendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlRendaLayout.createSequentialGroup()
-                .addGroup(pnlRendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(pnlRendaLayout.createSequentialGroup()
-                        .addComponent(lblQtdeMembrosFamilia)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtQtdeMembros, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlRendaLayout.createSequentialGroup()
-                        .addComponent(lblRendaFamiliar)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtRendaFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblRendaPerCapta)
+                .addContainerGap()
+                .addComponent(lblRendaFamiliar)
                 .addGap(31, 31, 31)
+                .addComponent(txtRendaFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48)
+                .addComponent(lblRendaPerCapta)
+                .addGap(32, 32, 32)
                 .addComponent(txtRendaPerCapta, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(80, Short.MAX_VALUE))
         );
         pnlRendaLayout.setVerticalGroup(
             pnlRendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlRendaLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlRendaLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnlRendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblRendaFamiliar)
                     .addComponent(lblRendaPerCapta)
                     .addComponent(txtRendaFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtRendaPerCapta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlRendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblQtdeMembrosFamilia)
-                    .addComponent(txtQtdeMembros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(23, 23, 23))
         );
 
         javax.swing.GroupLayout pnlCadastroBeneficiarioLayout = new javax.swing.GroupLayout(pnlCadastroBeneficiario);
@@ -494,12 +481,12 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
             pnlCadastroBeneficiarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlCadastroBeneficiarioLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnlTitularDoBeneficio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnlEnderecoRural, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnlTitularDoBeneficio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlEnderecoRural, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pnlRenda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addComponent(lblCamposObrigatorios)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlCadastroBeneficiarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -586,16 +573,27 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         try {
-            this.recuperarCamposTela();
+            this.validarCamposObrigratorios();
+            this.recuperarCamposTela();             
             BeneficiarioBO beneficiarioBO = new BeneficiarioBO();
-            beneficiarioBO.inserir(beneficiario, BeneficioAndBeneficiario);
-
-            JOptionPane.showMessageDialog(this,
-                    "Beneficiario cadastrado com sucesso!",
-                    "Cadastro de beneficiario",
-                    JOptionPane.INFORMATION_MESSAGE);
-            this.limparCamposTela();
-            this.cadastrarPedidoAveriguacao();
+            if(this.acaoTela == 0){
+                beneficiarioBO.inserir(this.beneficiario, this.beneficioAndBeneficiario);           
+                JOptionPane.showMessageDialog(this,
+                        "Beneficiario cadastrado com sucesso!",
+                        "Cadastro de beneficiario",
+                        JOptionPane.INFORMATION_MESSAGE);
+                    this.limparCamposTela();
+                    this.cadastrarPedidoAveriguacao();
+            }else{
+                beneficiarioBO.atualizar(this.beneficiario, this.beneficioAndBeneficiario);           
+                JOptionPane.showMessageDialog(this,
+                        "Beneficiario alterado com sucesso!",
+                        "Editar Cadastro de Beneficiario",
+                        JOptionPane.INFORMATION_MESSAGE);
+                this.limparCamposTela();
+                this.consultaBeneficiarioForm.carregarTabelaBeneficiarios();
+            }
+            
         }catch(SistemaAveriguacaoException sae){
             JOptionPane.showMessageDialog(
                     this,
@@ -627,10 +625,6 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
     private void txtRendaPerCaptaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRendaPerCaptaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtRendaPerCaptaActionPerformed
-
-    private void txtQtdeMembrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQtdeMembrosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtQtdeMembrosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -682,7 +676,6 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
     private javax.swing.JLabel lblNis;
     private javax.swing.JLabel lblNome;
     private javax.swing.JLabel lblNumero;
-    private javax.swing.JLabel lblQtdeMembrosFamilia;
     private javax.swing.JLabel lblRendaFamiliar;
     private javax.swing.JLabel lblRendaPerCapta;
     private javax.swing.JLabel lblRua;
@@ -698,7 +691,6 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
     private javax.swing.JTextField txtNis;
     private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtNumero;
-    private javax.swing.JTextField txtQtdeMembros;
     private javax.swing.JTextField txtRendaFamiliar;
     private javax.swing.JTextField txtRendaPerCapta;
     private javax.swing.JTextField txtRua;

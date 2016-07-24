@@ -7,6 +7,7 @@ package br.com.sabe.negocio;
 
 import br.com.sabe.entidade.Beneficiario;
 import br.com.sabe.entidade.Beneficio;
+import br.com.sabe.entidade.BeneficioAndBeneficiario;
 import br.com.sabe.persistencia.BeneficioDAO;
 import br.com.sabe.excecao.BeneficiarioExistenteException;
 import br.com.sabe.persistencia.BeneficiarioDAO;
@@ -33,7 +34,6 @@ public class BeneficioBO {
 
     public void excluirBeneficio(Beneficio beneficio) throws SQLException {
         BeneficioDAO beneficioDAO = new BeneficioDAO();
-        //verificarBeneficiariosExistentes(beneficio);
         beneficioDAO.excluirBeneficio(beneficio);
     }
     /*public void verificarBeneficiariosExistentes(Beneficio beneficio){
