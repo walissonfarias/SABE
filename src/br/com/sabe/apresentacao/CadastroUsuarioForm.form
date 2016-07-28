@@ -74,28 +74,7 @@
                       </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lblLogin" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblSenha" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblNome" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="txtLogin" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="txtNome" max="32767" attributes="0"/>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
-                                          <Component id="txtSenha" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="lblRepitaSenha" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                                  <Component id="txtRepitaSenha" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
                                   <Component id="btnFechar" min="-2" pref="107" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btnNovo" min="-2" pref="107" max="-2" attributes="0"/>
@@ -103,6 +82,30 @@
                                   <Component id="btnPesquisar" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="btnSalvar" min="-2" pref="106" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Component id="txtRepitaSenha" alignment="1" min="-2" pref="239" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lblRepitaSenha" min="-2" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="140" max="-2" attributes="0"/>
+                                              <Component id="txtSenha" min="-2" pref="239" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <Component id="txtLogin" alignment="1" min="-2" pref="239" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Component id="lblNome" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblLogin" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblSenha" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
+                                  <Component id="txtNome" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -129,14 +132,14 @@
                       <Component id="lblSenha" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtSenha" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblRepitaSenha" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtRepitaSenha" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="lblRepitaSenha" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtRepitaSenha" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="pnlGrupoUsuarios" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Component id="lblCamposObrigatorios" min="-2" max="-2" attributes="0"/>
@@ -226,9 +229,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Gestor"/>
               </Properties>
-              <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="chbGestorFocusLost"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JCheckBox" name="chbAssistenteSocial">
               <Properties>
@@ -237,9 +237,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Assistente Social"/>
               </Properties>
-              <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="chbAssistenteSocialFocusLost"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JCheckBox" name="chbRecepcionista">
               <Properties>
@@ -248,9 +245,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Recepcionista"/>
               </Properties>
-              <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="chbRecepcionistaFocusLost"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JCheckBox" name="chbOrientadorSocial">
               <Properties>
@@ -259,9 +253,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Orientador Social"/>
               </Properties>
-              <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="chbOrientadorSocialFocusLost"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -333,6 +324,9 @@
           </Events>
         </Component>
         <Component class="javax.swing.JPasswordField" name="txtSenha">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtSenhaFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblRepitaSenha">
           <Properties>
@@ -340,6 +334,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JPasswordField" name="txtRepitaSenha">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtRepitaSenhaFocusLost"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

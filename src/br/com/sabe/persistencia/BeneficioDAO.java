@@ -22,6 +22,7 @@ public class BeneficioDAO {
     private static final String SQL_INSERT = "INSERT INTO BENEFICIO (NOME, TIPO, VALOR) VALUES (?, ?, ?)";
     private static final String SQL_UPDATE_DADOS = "UPDATE BENEFICIO SET NOME=?, TIPO=?, VALOR=? WHERE ID=?";
     private static final String SQL_BUSCAR_TODOS = "SELECT*FROM BENEFICIO";
+    private static final String SQL_BUSCAR_BY_NOME= "SELECT*FROM BENEFICIO WHERE NOME=?";
     private static final String SQL_EXCLUIR = "DELETE FROM BENEFICIO WHERE NOME= ? ";
 
     public void inserir(Beneficio beneficio) throws SQLException{
@@ -73,19 +74,21 @@ public class BeneficioDAO {
             }
         }
     }
-    /*public Usuario buscarByNome(String nome) throws SQLException{
+    public boolean buscarByNome(String nome) throws SQLException{
         Usuario usuario = null;
         Connection conexao = null;
         PreparedStatement comando = null;
         ResultSet resultado = null;
+        Beneficio beneficio = null;
         try{
             conexao = BancoDadosUtil.getConnection();
-            comando = conexao.prepareStatement(SQL_BUSCAR_BY_LOGIN);
+            comando = conexao.prepareStatement(SQL_BUSCAR_BY_NOME);
             comando.setString(1, nome);
             resultado = comando.executeQuery();
             
             while(resultado.next()){
-                usuario = this.extrairLinhaResultado(resultado);
+                beneficio = this.extrairLinhaResultado(resultado);
+                return true;
             }    
         }catch(Exception e){
             if(conexao!= null){
@@ -95,8 +98,13 @@ public class BeneficioDAO {
         }finally{
             BancoDadosUtil.fecharChamadasBancoDados(conexao, comando, resultado);
         }
-        return usuario;
-    }*/
+        if(beneficio ==  null){
+            return false;
+        }else{
+            return true;
+        }
+        
+    }
     public List<Beneficio> buscarTodos() throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;

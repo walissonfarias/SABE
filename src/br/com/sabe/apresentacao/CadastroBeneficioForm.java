@@ -107,7 +107,7 @@ public class CadastroBeneficioForm extends javax.swing.JFrame {
             }
         });
 
-        lblTipoBeneficio.setText("Tipo de Beneficio:");
+        lblTipoBeneficio.setText("*Tipo de Beneficio:");
 
         btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/1467304636_search.png"))); // NOI18N
         btnPesquisar.setText("Pesquisar");
@@ -118,9 +118,9 @@ public class CadastroBeneficioForm extends javax.swing.JFrame {
             }
         });
 
-        lblNomeBeneficio.setText("Nome do Beneficio:");
+        lblNomeBeneficio.setText("*Nome do Beneficio:");
 
-        lblValorBeneficio.setText("Valor do Benefício:");
+        lblValorBeneficio.setText("*Valor do Benefício:");
 
         txtTipoBeneficio.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -173,26 +173,26 @@ public class CadastroBeneficioForm extends javax.swing.JFrame {
                         .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 261, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnPesquisar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
                     .addGroup(pnlCadastroBeneficiarioLayout.createSequentialGroup()
+                        .addComponent(lblCamposObrigatorios)
+                        .addGap(569, 569, 569))
+                    .addGroup(pnlCadastroBeneficiarioLayout.createSequentialGroup()
                         .addGroup(pnlCadastroBeneficiarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblNomeBeneficio)
-                            .addComponent(lblTipoBeneficio))
+                            .addComponent(lblTipoBeneficio)
+                            .addComponent(lblValorBeneficio))
                         .addGap(1, 1, 1)
-                        .addGroup(pnlCadastroBeneficiarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtTipoBeneficio)
-                            .addComponent(txtNomeBeneficio)))
-                    .addGroup(pnlCadastroBeneficiarioLayout.createSequentialGroup()
-                        .addComponent(lblCamposObrigatorios)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(pnlCadastroBeneficiarioLayout.createSequentialGroup()
-                        .addComponent(lblValorBeneficio)
-                        .addGap(7, 7, 7)
-                        .addComponent(txtValorBeneficio))))
+                        .addGroup(pnlCadastroBeneficiarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlCadastroBeneficiarioLayout.createSequentialGroup()
+                                .addComponent(txtValorBeneficio, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(txtTipoBeneficio, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtNomeBeneficio, javax.swing.GroupLayout.Alignment.TRAILING)))))
         );
         pnlCadastroBeneficiarioLayout.setVerticalGroup(
             pnlCadastroBeneficiarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -209,9 +209,9 @@ public class CadastroBeneficioForm extends javax.swing.JFrame {
                 .addGroup(pnlCadastroBeneficiarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblValorBeneficio)
                     .addComponent(txtValorBeneficio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(263, 263, 263)
-                .addComponent(lblCamposObrigatorios)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(37, 37, 37)
+                .addComponent(lblCamposObrigatorios, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 194, Short.MAX_VALUE)
                 .addGroup(pnlCadastroBeneficiarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -233,7 +233,7 @@ public class CadastroBeneficioForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnlCadastroBeneficiario, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE)
+                .addComponent(pnlCadastroBeneficiario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

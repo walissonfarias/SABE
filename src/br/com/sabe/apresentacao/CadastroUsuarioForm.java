@@ -5,7 +5,8 @@
  */
 package br.com.sabe.apresentacao;
 
-import br.com.sabe.apresentacao.criptografia.Criptografia;
+import br.com.sabe.apresentacao.classesUteis.DocumentoLimitado;
+import br.com.sabe.apresentacao.classesUteis.Criptografia;
 import br.com.sabe.entidade.Usuario;
 import br.com.sabe.excecao.ArgumentoInvalidoException;
 import br.com.sabe.excecao.CampoObrigatorioException;
@@ -41,11 +42,12 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
         acaoTela = 0;
     }
     public CadastroUsuarioForm(Usuario usuarioConsultado){
-        prepararTela();
+        this.prepararTela();
         this.usuario = usuarioConsultado;
         this.inicializarCamposTela();
         this.habilitarBotoesTela();
         this.acaoTela = 1;
+        this.txtLogin.setEnabled(false);
     }
 
     private void prepararTela() {
@@ -73,8 +75,11 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
         if(gestorExistente == true){
             chbGestor.setEnabled(false);
         }
-        btnNovo.setEnabled(false);
-        btnSalvar.setEnabled(false);
+        if(!txtNome.getText().isEmpty() && !txtLogin.getText().isEmpty() && 
+            !txtSenha.getText().isEmpty()){
+            btnNovo.setEnabled(false);
+            btnSalvar.setEnabled(false);
+        }
     }
     private void habilitarBotoesTela(){
         if(!txtNome.getText().isEmpty() && !txtLogin.getText().isEmpty() && 
@@ -195,35 +200,15 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
 
         btnGrupoUsuarios.add(chbGestor);
         chbGestor.setText("Gestor");
-        chbGestor.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                chbGestorFocusLost(evt);
-            }
-        });
 
         btnGrupoUsuarios.add(chbAssistenteSocial);
         chbAssistenteSocial.setText("Assistente Social");
-        chbAssistenteSocial.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                chbAssistenteSocialFocusLost(evt);
-            }
-        });
 
         btnGrupoUsuarios.add(chbRecepcionista);
         chbRecepcionista.setText("Recepcionista");
-        chbRecepcionista.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                chbRecepcionistaFocusLost(evt);
-            }
-        });
 
         btnGrupoUsuarios.add(chbOrientadorSocial);
         chbOrientadorSocial.setText("Orientador Social");
-        chbOrientadorSocial.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                chbOrientadorSocialFocusLost(evt);
-            }
-        });
 
         javax.swing.GroupLayout pnlGrupoUsuariosLayout = new javax.swing.GroupLayout(pnlGrupoUsuarios);
         pnlGrupoUsuarios.setLayout(pnlGrupoUsuariosLayout);
@@ -301,7 +286,19 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
             }
         });
 
+        txtSenha.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtSenhaFocusLost(evt);
+            }
+        });
+
         lblRepitaSenha.setText("*Repita a Senha:");
+
+        txtRepitaSenha.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtRepitaSenhaFocusLost(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -317,29 +314,31 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblLogin)
-                                    .addComponent(lblSenha)
-                                    .addComponent(lblNome))
-                                .addGap(1, 1, 1)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(txtLogin, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtNome)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(57, 57, 57)
-                                        .addComponent(txtSenha))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblRepitaSenha)
-                                .addGap(1, 1, 1)
-                                .addComponent(txtRepitaSenha))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnPesquisar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtRepitaSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lblRepitaSenha)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addGap(140, 140, 140)
+                                            .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(31, 31, 31)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblNome)
+                                    .addComponent(lblLogin)
+                                    .addComponent(lblSenha))
+                                .addGap(55, 55, 55)
+                                .addComponent(txtNome)))
                         .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
@@ -357,13 +356,13 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSenha)
                     .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(12, 12, 12)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblRepitaSenha)
                     .addComponent(txtRepitaSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pnlGrupoUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(lblCamposObrigatorios)
@@ -422,13 +421,13 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Usuario cadastrado com sucesso!", "Cadastro de usuario", JOptionPane.INFORMATION_MESSAGE);
             }else{    
                 usuarioBO.atualizarDados(usuario);           
-                JOptionPane.showMessageDialog(this, "Cadasdatra atualizado com sucesso!", "Editar de usuario", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Cadastro atualizado com sucesso!", "Editar de usuario", JOptionPane.INFORMATION_MESSAGE);
             } 
             this.limparCamposTela();
             desabilitarBotoesTela();
         }catch(SistemaAveriguacaoException sae){
             String mensagem = "Erro ao realizar operação:\n" + sae.getMessage();
-            JOptionPane.showMessageDialog(this, mensagem, "Cadastro de aluno", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, mensagem, "Cadastro de Usuario", JOptionPane.ERROR_MESSAGE);
         }catch(Exception e){
             String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
             mensagem += "\nMensagem de erro:\n" + e.getMessage();
@@ -437,14 +436,20 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
-        String mensagem = "Deseja fechar a tela de cadastros de usuarios?"
-                + "Os dados ja preenchidos serao descartados!";
-        String titulo = "Fechar Tela Cadastro de Usuarios";
-        int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
-        if (resposta == JOptionPane.YES_OPTION) {
-            limparCamposTela();
+        if (!txtNome.getText().trim().isEmpty()
+                || !txtLogin.getText().trim().isEmpty()
+                || !txtSenha.getText().trim().isEmpty()){        
+            String mensagem = "Deseja fechar a tela de cadastros de usuarios?"
+                    + "Os dados ja preenchidos serao descartados!";
+            String titulo = "Fechar Tela Cadastro de Usuarios";
+            int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
+            if (resposta == JOptionPane.YES_OPTION) {
+                limparCamposTela();
+                this.dispose();
+            }  
+        }else{
             this.dispose();
-        }  
+        }
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void txtNomeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNomeFocusLost
@@ -454,22 +459,6 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
     private void txtLoginFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLoginFocusLost
         habilitarBotoesTela();
     }//GEN-LAST:event_txtLoginFocusLost
-
-    private void chbGestorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_chbGestorFocusLost
-        habilitarBotoesTela();
-    }//GEN-LAST:event_chbGestorFocusLost
-
-    private void chbRecepcionistaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_chbRecepcionistaFocusLost
-        habilitarBotoesTela();
-    }//GEN-LAST:event_chbRecepcionistaFocusLost
-
-    private void chbAssistenteSocialFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_chbAssistenteSocialFocusLost
-        habilitarBotoesTela();
-    }//GEN-LAST:event_chbAssistenteSocialFocusLost
-
-    private void chbOrientadorSocialFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_chbOrientadorSocialFocusLost
-        habilitarBotoesTela();
-    }//GEN-LAST:event_chbOrientadorSocialFocusLost
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
         String mensagem = "Os dados ja preenchidos serao descartados";
@@ -484,6 +473,14 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
             this.dispose();
         }   
     }//GEN-LAST:event_btnPesquisarActionPerformed
+
+    private void txtSenhaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSenhaFocusLost
+        habilitarBotoesTela();
+    }//GEN-LAST:event_txtSenhaFocusLost
+
+    private void txtRepitaSenhaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtRepitaSenhaFocusLost
+        habilitarBotoesTela();
+    }//GEN-LAST:event_txtRepitaSenhaFocusLost
 
     /**
      * @param args the command line arguments

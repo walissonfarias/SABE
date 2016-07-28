@@ -5,6 +5,7 @@
  */
 package br.com.sabe.apresentacao;
 
+import br.com.sabe.apresentacao.classesUteis.DocumentoLimitado;
 import br.com.sabe.entidade.Beneficiario;
 import br.com.sabe.entidade.PedidoAveriguacao;
 import br.com.sabe.entidade.ResultadoAveriguacao;
@@ -53,12 +54,16 @@ public class CadastroResultadoAveriguacaoForm extends javax.swing.JFrame {
             this.initComponents();
             this.desativarCamposPedidoAveriguacao();
             this.inicializarCamposPedidoTela();
+            this.limitarCampos();
         } catch (Exception e) {
             String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
             mensagem += "\nMensagem de erro:\n" + e.getMessage();
             JOptionPane.showMessageDialog(this, mensagem, "Cadastro de aluno", JOptionPane.ERROR_MESSAGE);
             this.dispose();
         }
+    }
+    public void limitarCampos(){
+        txtNisTitular.setDocument(new DocumentoLimitado(11));
     }
     public void desativarCamposPedidoAveriguacao(){
         this.txtDataPedido.setEnabled(false);

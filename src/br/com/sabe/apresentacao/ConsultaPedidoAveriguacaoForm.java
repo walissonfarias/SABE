@@ -4,8 +4,11 @@
  * and open the template in the editor.
  */
 package br.com.sabe.apresentacao;
+import br.com.sabe.apresentacao.classesUteis.DocumentoLimitado;
 import br.com.sabe.entidade.PedidoAveriguacao;
 import br.com.sabe.entidade.Usuario;
+import br.com.sabe.excecao.CampoObrigatorioException;
+import br.com.sabe.negocio.BeneficioAndBeneficiarioBO;
 import br.com.sabe.negocio.PedidoAveriguacaoBO;
 import br.com.sabe.negocio.UsuarioBO;
 import br.com.sabe.persistencia.UsuarioDAO;
@@ -35,8 +38,8 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
         try {
             this.initComponents();
             this.carregarTabelaPedidoAveriguacao();
-            this.limitandoCampos();
-            //this.carregarComboLocalidade();
+            this.limitarCampos();
+            this.carregarComboLocalidade();
         } catch (Exception e) {
             String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
             mensagem += "\nMensagem de erro:\n" + e.getMessage();
@@ -44,19 +47,37 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
             this.dispose();
         }
     }
-    public void limitandoCampos(){
-        this.txtNis.setDocument(new DocumentoLimitado(11));
+    public void limitarCampos(){
+        this.txtNisTitular.setDocument(new DocumentoLimitado(11));
+        this.txtNome.setDocument(new DocumentoLimitado(60));
     }
     public void carregarComboLocalidade() throws SQLException {
         PedidoAveriguacaoBO pedidoAveriguacaoBO = new PedidoAveriguacaoBO();
         this.listaPedidoAveriguacao = pedidoAveriguacaoBO.buscarTodos();
 
         this.cmbLocalidade.removeAllItems();
-        
+        this.cmbLocalidade.addItem("selecione");
         for(PedidoAveriguacao pedidoAveriguacao: listaPedidoAveriguacao){
-            this.cmbLocalidade.addItem(pedidoAveriguacao.beneficiario.getLocalidade());
+            this.cmbLocalidade.addItem(pedidoAveriguacao.getBeneficiario().getLocalidade());
         }
     }
+    /*public void filtarTabelaBeneficiarios() throws SQLException{
+        int beneficioSelecionado = this.cmbLocalidade.getSelectedIndex();
+        PedidoAveriguacao pedidoAveriguacaoFiltro = null;
+        BeneficioAndBeneficiarioBO beneficioAndBeneficiarioBO = new BeneficioAndBeneficiarioBO();
+        if(!txtNisTitular.getText().equals("")){ 
+            this.listaPedidoAveriguacao = beneficioAndBeneficiarioBO.buscarByNis(this.txtNisTitular.getText());                   
+            ModeloTabelaBeneficiarios modelo = new ModeloTabelaBeneficiarios();
+            tblBeneficiarios.setModel(modelo);
+        }else if(!txtNome.getText().equals("")){
+            this.listaBeneficioAndBeneficiario = beneficioAndBeneficiarioBO.buscarByNome(this.txtNome.getText());                   
+            ModeloTabelaBeneficiarios modelo = new ModeloTabelaBeneficiarios();
+            tblBeneficiarios.setModel(modelo);
+        }else{
+            this.carregarTabelaPedidoAveriguacao();
+            throw new CampoObrigatorioException();     
+        }
+    }*/
     public void carregarTabelaPedidoAveriguacao() throws SQLException{
         PedidoAveriguacaoBO pedidoAveriguacaoBO = new PedidoAveriguacaoBO();
         this.listaPedidoAveriguacao = pedidoAveriguacaoBO.buscarTodos();
@@ -83,12 +104,12 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
         btnExcluir = new javax.swing.JButton();
         pnlFiltro = new javax.swing.JPanel();
         lblNis = new javax.swing.JLabel();
-        txtNis = new javax.swing.JFormattedTextField();
         lblNome = new javax.swing.JLabel();
         txtNome = new javax.swing.JTextField();
         lblCurso = new javax.swing.JLabel();
         cmbLocalidade = new javax.swing.JComboBox();
         btnFiltrar = new javax.swing.JButton();
+        txtNisTitular = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Tela de Pedido de Averiguação");
@@ -176,8 +197,6 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
 
         lblNis.setText("NIS do Beneficiario Titular:");
 
-        txtNis.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-
         lblNome.setText("Nome do Beneficiario Titular:");
 
         lblCurso.setText("Localidade");
@@ -201,8 +220,8 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
                             .addComponent(lblNis)
                             .addComponent(lblNome)
                             .addComponent(lblCurso)
-                            .addComponent(txtNis, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNisTitular, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -212,8 +231,8 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lblNis)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtNisTitular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addComponent(lblNome)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -342,7 +361,7 @@ public class ConsultaPedidoAveriguacaoForm extends javax.swing.JFrame {
     private javax.swing.JPanel pnlFiltro;
     private javax.swing.JPanel pnlResultado2;
     private javax.swing.JTable tblPedidoAveriguacao;
-    private javax.swing.JFormattedTextField txtNis;
+    private javax.swing.JTextField txtNisTitular;
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables
     private class ModeloTabelaPedidoAveriguacao extends AbstractTableModel {

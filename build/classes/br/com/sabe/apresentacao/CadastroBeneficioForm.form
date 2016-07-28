@@ -36,7 +36,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="pnlCadastroBeneficiario" pref="519" max="32767" attributes="0"/>
+              <Component id="pnlCadastroBeneficiario" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -66,31 +66,31 @@
                           <Component id="btnFechar" min="-2" pref="107" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnNovo" min="-2" pref="107" max="-2" attributes="0"/>
-                          <EmptySpace pref="261" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="btnPesquisar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnSalvar" min="-2" pref="106" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
+                      <Group type="102" attributes="0">
+                          <Component id="lblCamposObrigatorios" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="569" max="-2" attributes="0"/>
+                      </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="lblNomeBeneficio" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lblTipoBeneficio" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblValorBeneficio" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="txtValorBeneficio" min="-2" pref="144" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
                               <Component id="txtTipoBeneficio" alignment="1" max="32767" attributes="0"/>
                               <Component id="txtNomeBeneficio" alignment="1" max="32767" attributes="0"/>
                           </Group>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Component id="lblCamposObrigatorios" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Component id="lblValorBeneficio" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
-                          <Component id="txtValorBeneficio" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -114,9 +114,9 @@
                       <Component id="lblValorBeneficio" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtValorBeneficio" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="263" max="-2" attributes="0"/>
-                  <Component id="lblCamposObrigatorios" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                  <Component id="lblCamposObrigatorios" min="-2" pref="43" max="-2" attributes="0"/>
+                  <EmptySpace pref="194" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnSalvar" alignment="3" min="-2" pref="45" max="-2" attributes="0"/>
                       <Component id="btnFechar" alignment="3" min="-2" pref="45" max="-2" attributes="0"/>
@@ -145,7 +145,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblTipoBeneficio">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Tipo de Beneficio:"/>
+            <Property name="text" type="java.lang.String" value="*Tipo de Beneficio:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btnPesquisar">
@@ -162,12 +162,12 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblNomeBeneficio">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Nome do Beneficio:"/>
+            <Property name="text" type="java.lang.String" value="*Nome do Beneficio:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblValorBeneficio">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Valor do Benef&#xed;cio:"/>
+            <Property name="text" type="java.lang.String" value="*Valor do Benef&#xed;cio:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtTipoBeneficio">

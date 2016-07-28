@@ -5,6 +5,7 @@
  */
 package br.com.sabe.apresentacao;
 
+import br.com.sabe.apresentacao.classesUteis.DocumentoLimitado;
 import br.com.sabe.entidade.Beneficiario;
 import br.com.sabe.entidade.BeneficioAndBeneficiario;
 import br.com.sabe.entidade.Beneficio;
@@ -57,7 +58,7 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
         try {
             this.initComponents();
             this.carregarComboBeneficios();
-            this.limitandoCampos();
+            this.limitarCampos();
             if(acaoTela == 1){
                 this.inicializarCamposTela();
                 this.txtNis.setEnabled(false);
@@ -69,9 +70,9 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
             this.dispose();
         }
     }
-    public void limitandoCampos(){
-        txtNis.setDocument(new DocumentoLimitado(11));
-        txtNome.setDocument(new DocumentoLimitado(60));
+    public void limitarCampos(){
+        this.txtNis.setDocument(new DocumentoLimitado(11));
+        this.txtNome.setDocument(new DocumentoLimitado(60));
     }    
     public void carregarComboBeneficios() throws SQLException {
         BeneficioBO beneficioBO = new BeneficioBO();
@@ -158,12 +159,15 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
             throw new CampoObrigatorioException();
         }
     }
-     private void cadastrarPedidoAveriguacao() {
+     private void cadastrarPedidoAveriguacao() throws SQLException {
         String mensagem = "Deseja cadastrar um Pedido de Averiguação?";
         String titulo = "Tela cadastro de beneficiario";
         int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
         if (resposta == JOptionPane.YES_OPTION) {
             limparCamposTela();
+            BeneficiarioBO beneficiarioBO= new BeneficiarioBO();
+            Beneficiario beneficiario = new Beneficiario();
+            beneficiario = beneficiarioBO.buscarByNis(this.beneficiario.getNis());
             if(cadastroPedidoAveriguacaoForm == null){
                 cadastroPedidoAveriguacaoForm = new CadastroPedidoAveriguacaoForm(beneficiario);
             }
@@ -378,19 +382,16 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
             .addGroup(pnlTitularDoBeneficioLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlTitularDoBeneficioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNome)
+                    .addComponent(lblBeneficio)
+                    .addComponent(lblNis))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlTitularDoBeneficioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlTitularDoBeneficioLayout.createSequentialGroup()
-                        .addGroup(pnlTitularDoBeneficioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNome)
-                            .addComponent(lblBeneficio))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlTitularDoBeneficioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmbBeneficios, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtNome)))
-                    .addGroup(pnlTitularDoBeneficioLayout.createSequentialGroup()
-                        .addComponent(lblNis)
-                        .addGap(20, 20, 20)
                         .addComponent(txtNis, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(cmbBeneficios, 0, 610, Short.MAX_VALUE)
+                    .addComponent(txtNome))
                 .addContainerGap())
         );
         pnlTitularDoBeneficioLayout.setVerticalGroup(
@@ -596,6 +597,7 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
                         JOptionPane.INFORMATION_MESSAGE);
                 this.limparCamposTela();
                 this.consultaBeneficiarioForm.carregarTabelaBeneficiarios();
+                this.dispose();
             }
             
         }catch(SistemaAveriguacaoException sae){

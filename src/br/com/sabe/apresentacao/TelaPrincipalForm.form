@@ -261,30 +261,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Relatorios"/>
           </Properties>
-          <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="mnuItemRelatorioSituacaoBeneficiarios">
-              <Properties>
-                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                  <KeyStroke key="Shift+B"/>
-                </Property>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/br/com/sabe/apresentacao/icones/document9.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Situa&#xe7;&#xe3;o de Beneficiarios"/>
-              </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="mnuItemRelatorioLocalidadesMaisAveriguadas">
-              <Properties>
-                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                  <KeyStroke key="Shift+L"/>
-                </Property>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/br/com/sabe/apresentacao/icones/ascendant6.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Localidades Mais Averiguadas"/>
-              </Properties>
-            </MenuItem>
-          </SubComponents>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuReltaoriosActionPerformed"/>
+          </Events>
         </Menu>
         <Menu class="javax.swing.JMenu" name="mnuAjuda">
           <Properties>

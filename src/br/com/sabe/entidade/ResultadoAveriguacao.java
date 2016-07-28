@@ -16,7 +16,7 @@ public class ResultadoAveriguacao {
     private Date dataResultado;
     private String resultado;
     private String decisao;
-    private PedidoAveriguacao pedidoAveriguacao;
+    public PedidoAveriguacao pedidoAveriguacao;
 
     public int getId() {
         return id;

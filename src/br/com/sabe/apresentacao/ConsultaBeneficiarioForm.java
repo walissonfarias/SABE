@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package br.com.sabe.apresentacao;
+import br.com.sabe.apresentacao.classesUteis.DocumentoLimitado;
 import br.com.sabe.entidade.Beneficiario;
 import br.com.sabe.entidade.Beneficio;
 import br.com.sabe.entidade.BeneficioAndBeneficiario;
@@ -45,9 +46,9 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
     public void prepararTela(){
         try {
             this.initComponents();
+            this.limitarCamposTela();
             this.carregarTabelaBeneficiarios();
             this.carregarComboBeneficios();
-            this.limitandoCampos();
         } catch (Exception e) {
             String mensagem = "Erro inesperado! Informe a mensagem de erro ao administrador do sistema.";
             mensagem += "\nMensagem de erro:\n" + e.getMessage();
@@ -55,9 +56,9 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
             this.dispose();
         }
     }
-    public void limitandoCampos(){
-        this.txtNis.setDocument(new DocumentoLimitado(11));
-        this.txtNome.setDocument(new DocumentoLimitado((60)));
+    public void limitarCamposTela(){
+        this.txtNisTitular.setDocument(new DocumentoLimitado(11));
+        this.txtNome.setDocument(new DocumentoLimitado(60));
     }
     public void carregarComboBeneficios() throws SQLException {
         BeneficioBO beneficioBO = new BeneficioBO();
@@ -69,13 +70,6 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
             this.cmbBeneficios.addItem(beneficio.getNome());
         }
     }
-    /*public void carregarTabelaBeneficiarios() throws SQLException{
-        BeneficiarioBO beneficiarioBO = new BeneficiarioBO();
-        this.beneficiarios = beneficiarioBO.buscarTodos();
-
-        ModeloTabelaAluno modelo = new ModeloTabelaAluno();
-        tblBeneficiarios.setModel(modelo);
-    }*/
     public void carregarTabelaBeneficiarios() throws SQLException{
         BeneficioAndBeneficiarioBO beneficioAndBeneficiarioBO = new BeneficioAndBeneficiarioBO();
         this.listaBeneficioAndBeneficiario = 
@@ -94,8 +88,8 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
             }           
             ModeloTabelaBeneficiarios modelo = new ModeloTabelaBeneficiarios();
             tblBeneficiarios.setModel(modelo);
-        }else if(!txtNis.getText().equals("")){ 
-            this.listaBeneficioAndBeneficiario = beneficioAndBeneficiarioBO.buscarByNis(this.txtNis.getText());                   
+        }else if(!txtNisTitular.getText().equals("")){ 
+            this.listaBeneficioAndBeneficiario = beneficioAndBeneficiarioBO.buscarByNis(this.txtNisTitular.getText());                   
             ModeloTabelaBeneficiarios modelo = new ModeloTabelaBeneficiarios();
             tblBeneficiarios.setModel(modelo);
         }else if(!txtNome.getText().equals("")){
@@ -103,9 +97,11 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
             ModeloTabelaBeneficiarios modelo = new ModeloTabelaBeneficiarios();
             tblBeneficiarios.setModel(modelo);
         }else{
+            this.carregarTabelaBeneficiarios();
             throw new CampoObrigatorioException();     
         }
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -125,12 +121,12 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
         btnExcluir = new javax.swing.JButton();
         pnlFiltro = new javax.swing.JPanel();
         lblNis = new javax.swing.JLabel();
-        txtNis = new javax.swing.JFormattedTextField();
         lblNome = new javax.swing.JLabel();
         txtNome = new javax.swing.JTextField();
         lblCurso = new javax.swing.JLabel();
         btnFiltrar = new javax.swing.JButton();
         cmbBeneficios = new javax.swing.JComboBox();
+        txtNisTitular = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Tela de Consulta de Beneficiário");
@@ -243,13 +239,6 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
 
         lblNis.setText("NIS do Beneficiario Titular:");
 
-        txtNis.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        txtNis.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNisActionPerformed(evt);
-            }
-        });
-
         lblNome.setText("Nome do Beneficiário Titular:");
 
         lblCurso.setText("Beneficio:");
@@ -284,17 +273,17 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
                     .addGroup(pnlFiltroLayout.createSequentialGroup()
                         .addGroup(pnlFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNis, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblNome, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblNome, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNisTitular, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         pnlFiltroLayout.setVerticalGroup(
             pnlFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlFiltroLayout.createSequentialGroup()
                 .addComponent(lblNis)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtNisTitular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblNome)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -395,10 +384,6 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
             
     }//GEN-LAST:event_btnFiltrarActionPerformed
 
-    private void txtNisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNisActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNisActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -447,7 +432,7 @@ public class ConsultaBeneficiarioForm extends javax.swing.JFrame {
     private javax.swing.JPanel pnlFiltro;
     private javax.swing.JPanel pnlResultado2;
     private javax.swing.JTable tblBeneficiarios;
-    private javax.swing.JFormattedTextField txtNis;
+    private javax.swing.JTextField txtNisTitular;
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables
     private class ModeloTabelaBeneficiarios extends AbstractTableModel {

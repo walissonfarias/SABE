@@ -190,8 +190,8 @@
                               <Component id="lblNis" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lblNome" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lblCurso" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtNis" alignment="0" min="-2" pref="212" max="-2" attributes="0"/>
                               <Component id="btnFiltrar" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
+                              <Component id="txtNisTitular" alignment="0" min="-2" pref="245" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
@@ -206,8 +206,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="lblNis" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="txtNis" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="txtNisTitular" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   <Component id="lblNome" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="txtNome" min="-2" max="-2" attributes="0"/>
@@ -225,13 +225,6 @@
         <Component class="javax.swing.JLabel" name="lblNis">
           <Properties>
             <Property name="text" type="java.lang.String" value="NIS do Beneficiario Titular:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtNis">
-          <Properties>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format format="#0" subtype="-1" type="0"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblNome">
@@ -265,6 +258,8 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Filtrar"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtNisTitular">
         </Component>
       </SubComponents>
     </Container>

@@ -10,6 +10,7 @@ import br.com.sabe.entidade.Beneficio;
 import br.com.sabe.entidade.BeneficioAndBeneficiario;
 import br.com.sabe.persistencia.BeneficioDAO;
 import br.com.sabe.excecao.BeneficiarioExistenteException;
+import br.com.sabe.excecao.BeneficioExistenteException;
 import br.com.sabe.persistencia.BeneficiarioDAO;
 import java.sql.SQLException;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 public class BeneficioBO {
     public void inserir(Beneficio beneficio) throws SQLException{
         BeneficioDAO beneficioDAO = new BeneficioDAO();
+        this.verificarBeneficioExistente(beneficio);
         beneficioDAO.inserir(beneficio);
     }
     public void alterar(Beneficio beneficio) throws SQLException {
@@ -36,12 +38,11 @@ public class BeneficioBO {
         BeneficioDAO beneficioDAO = new BeneficioDAO();
         beneficioDAO.excluirBeneficio(beneficio);
     }
-    /*public void verificarBeneficiariosExistentes(Beneficio beneficio){
-        BeneficiarioDAO beneficiarioDAO = new BeneficiarioDAO();
-        Beneficiario beneficiarioExiste = beneficiarioDAO.buscarBeneficiarioByBeneficio(beneficio);
-        if(beneficiarioExiste != null){
-            throw new BeneficiarioExistenteException("impossivel excluir beneficio, "
-                    + "exclua os benefiarios antes de realizar essa operação");
+    public void verificarBeneficioExistente(Beneficio beneficio) throws SQLException{
+        BeneficioDAO beneficioDAO = new BeneficioDAO();
+        boolean beneficioExiste = beneficioDAO.buscarByNome(beneficio.getNome()); 
+        if( beneficioExiste == true){
+            throw new BeneficioExistenteException("Ja existe um beneficio cadastrado com esse nome\n");
         }
-    }*/
+    }
 }

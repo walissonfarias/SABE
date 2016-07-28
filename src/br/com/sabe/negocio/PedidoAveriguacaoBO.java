@@ -8,11 +8,13 @@ package br.com.sabe.negocio;
 import br.com.sabe.entidade.Beneficiario;
 import br.com.sabe.entidade.PedidoAveriguacao;
 import br.com.sabe.entidade.ResultadoAveriguacao;
+import br.com.sabe.entidade.SituacaoBeneficiarios;
 import br.com.sabe.persistencia.BeneficiarioDAO;
 import br.com.sabe.persistencia.PedidoAveriguacaoDAO;
 import br.com.sabe.excecao.PedidoAveriguacaoExistenteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,6 +48,10 @@ public class PedidoAveriguacaoBO {
         for(PedidoAveriguacao pedidoAveriguacao : listaPedido){           
                 verificarResultadoAveriguacaoExistente(pedidoAveriguacao.getId());               
         }
+    }
+    public List<SituacaoBeneficiarios> buscarSituaçõesBeneficiarios(Date dataInicio, Date dataTermino) throws SQLException{
+        PedidoAveriguacaoDAO pedidoAveriguacaoDAO = new PedidoAveriguacaoDAO();
+        return pedidoAveriguacaoDAO.buscarSistuacaoBeneficiarios(dataInicio, dataTermino);  
     }
     public void verificarResultadoAveriguacaoExistente(int idPedido) throws SQLException{
         ResultadoAveriguacaoBO resultadoAveriguacaoBO = new ResultadoAveriguacaoBO();        

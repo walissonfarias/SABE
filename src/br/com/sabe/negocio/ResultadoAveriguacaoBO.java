@@ -5,12 +5,15 @@
  */
 package br.com.sabe.negocio;
 
+import br.com.sabe.entidade.LocalidadesVisitadas;
 import br.com.sabe.entidade.PedidoAveriguacao;
 import br.com.sabe.entidade.ResultadoAveriguacao;
+import br.com.sabe.entidade.SituacaoBeneficiarios;
 import br.com.sabe.excecao.ResultadoAveriguacaoExistenteException;
 import br.com.sabe.persistencia.PedidoAveriguacaoDAO;
 import br.com.sabe.persistencia.ResultadoAveriguacaoDAO;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,5 +61,13 @@ public class ResultadoAveriguacaoBO {
     public List<ResultadoAveriguacao> buscarTodos() throws SQLException{
         ResultadoAveriguacaoDAO resultadoAveriguacaoDAO = new ResultadoAveriguacaoDAO();
         return resultadoAveriguacaoDAO.buscarTodos();  
+    }
+    public List<ResultadoAveriguacao> buscarAveriguacoes() throws SQLException{
+        ResultadoAveriguacaoDAO resultadoAveriguacaoDAO = new ResultadoAveriguacaoDAO();
+        return resultadoAveriguacaoDAO.buscarAveriguacoes();  
+    }    
+    public List<LocalidadesVisitadas> buscarLocalidadesVisitadas(Date dataInicio, Date dataTermino) throws SQLException{
+        ResultadoAveriguacaoDAO resultadoAveriguacaoDAO = new ResultadoAveriguacaoDAO();
+        return resultadoAveriguacaoDAO.buscarLocalidadesVisitadas(dataInicio, dataTermino);  
     }
 }

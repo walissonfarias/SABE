@@ -5,7 +5,8 @@
  */
 package br.com.sabe.apresentacao;
 
-import br.com.sabe.apresentacao.criptografia.Criptografia;
+import br.com.sabe.apresentacao.classesUteis.DocumentoLimitado;
+import br.com.sabe.apresentacao.classesUteis.Criptografia;
 import br.com.sabe.entidade.Usuario;
 import br.com.sabe.excecao.ArgumentoInvalidoException;
 import br.com.sabe.excecao.CampoObrigatorioException;
@@ -27,6 +28,7 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
     String senha;
     String login;
     Usuario usuario;
+    TelaRelatorios telaRelatorios = null;
     CadastroUsuarioForm cadastroUsuario = null;
     ConsultarUsuarioForm consultaUsuario = null;
     CadastroBeneficioForm cadastroBeneficio = null;
@@ -166,8 +168,6 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         mnuReltaorios = new javax.swing.JMenu();
-        mnuItemRelatorioSituacaoBeneficiarios = new javax.swing.JMenuItem();
-        mnuItemRelatorioLocalidadesMaisAveriguadas = new javax.swing.JMenuItem();
         mnuAjuda = new javax.swing.JMenu();
         mnuUsuarioAtivo = new javax.swing.JMenu();
         mnuItemAlterarSenha = new javax.swing.JMenuItem();
@@ -484,17 +484,11 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
 
         mnuReltaorios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/page_white_acrobat.png"))); // NOI18N
         mnuReltaorios.setText("Relatorios");
-
-        mnuItemRelatorioSituacaoBeneficiarios.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.SHIFT_MASK));
-        mnuItemRelatorioSituacaoBeneficiarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/document9.png"))); // NOI18N
-        mnuItemRelatorioSituacaoBeneficiarios.setText("Situação de Beneficiarios");
-        mnuReltaorios.add(mnuItemRelatorioSituacaoBeneficiarios);
-
-        mnuItemRelatorioLocalidadesMaisAveriguadas.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.SHIFT_MASK));
-        mnuItemRelatorioLocalidadesMaisAveriguadas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/ascendant6.png"))); // NOI18N
-        mnuItemRelatorioLocalidadesMaisAveriguadas.setText("Localidades Mais Averiguadas");
-        mnuReltaorios.add(mnuItemRelatorioLocalidadesMaisAveriguadas);
-
+        mnuReltaorios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuReltaoriosActionPerformed(evt);
+            }
+        });
         mnuBarMenuPrincipal.add(mnuReltaorios);
 
         mnuAjuda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/help.png"))); // NOI18N
@@ -691,8 +685,19 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void ItemConsultaBeneficiariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemConsultaBeneficiariosActionPerformed
-        // TODO add your handling code here:
+        if(consultaBeneficiario == null){
+            consultaBeneficiario  = new ConsultaBeneficiarioForm();
+        }
+        consultaBeneficiario.setVisible(true);
     }//GEN-LAST:event_ItemConsultaBeneficiariosActionPerformed
+
+    private void mnuReltaoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuReltaoriosActionPerformed
+        if(telaRelatorios == null){
+            telaRelatorios  = new TelaRelatorios();
+        }
+        telaRelatorios.setVisible(true);
+    }//GEN-LAST:event_mnuReltaoriosActionPerformed
+    
     public void exibirMensagemErro(String mensagem, String titulo) {
         JOptionPane.showMessageDialog(this, mensagem, titulo, JOptionPane.ERROR_MESSAGE);
     }
@@ -807,8 +812,6 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuItemConsultaPedido;
     private javax.swing.JMenuItem mnuItemConsultaResultado;
     private javax.swing.JMenuItem mnuItemConsultaUsuario;
-    private javax.swing.JMenuItem mnuItemRelatorioLocalidadesMaisAveriguadas;
-    private javax.swing.JMenuItem mnuItemRelatorioSituacaoBeneficiarios;
     private javax.swing.JMenuItem mnuItemSair;
     private javax.swing.JMenu mnuPedidoAveriguacao;
     private javax.swing.JMenu mnuReltaorios;

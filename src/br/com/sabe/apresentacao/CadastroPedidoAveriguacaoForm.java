@@ -38,6 +38,7 @@ public class CadastroPedidoAveriguacaoForm extends javax.swing.JFrame {
     }
     public CadastroPedidoAveriguacaoForm(Beneficiario beneficiarioCadastrado){
         this.acaoTela = 0;
+        this.pedidoAveriguacao = new PedidoAveriguacao();
         this.beneficiario = beneficiarioCadastrado;
         this.prepararTela();
     }
@@ -379,6 +380,8 @@ public class CadastroPedidoAveriguacaoForm extends javax.swing.JFrame {
         resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
         if (resposta == JOptionPane.YES_OPTION) {
             limparCamposTela();
+            this.txtNisTitular.setEnabled(true);
+            this.acaoTela = 0;
         }
     }//GEN-LAST:event_btnNovoActionPerformed
 
@@ -482,5 +485,4 @@ public class CadastroPedidoAveriguacaoForm extends javax.swing.JFrame {
     private javax.swing.JTextArea txtSituacao;
     // End of variables declaration//GEN-END:variables
 
-    
 }

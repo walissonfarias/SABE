@@ -7,11 +7,14 @@ package br.com.sabe.persistencia;
 
 import br.com.sabe.entidade.Beneficiario;
 import br.com.sabe.entidade.PedidoAveriguacao;
+import br.com.sabe.entidade.SituacaoBeneficiarios;
+import br.com.sabe.excecao.ConsultaSemResultadoException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,7 +31,12 @@ public class PedidoAveriguacaoDAO {
             + "BRIO.BAIRRO,BRIO.RUA, BRIO.NUMERO, BRIO.RENDA_FAMILIAR,BRIO.RENDA_PER_CAPTA,P.ID, P.DATA_PEDIDO, P.SITUACAO "
             + "FROM BENEFICIARIO BRIO JOIN PEDIDO P ON BRIO.ID=P.ID_BENEFICIARIO"; 
     public static final String SQL_EXCLUIR = "DELETE FROM PEDIDO WHERE ID=?";
-    
+        private static final String SQL_BUSCAR_SITUACAO_BENEFICIARIOS = "SELECT P.DATA_PEDIDO, BRIO.NIS, BRIO.NOME,\n" 
+                + "BRIO.ZONA, BRIO.LOCALIDADE, BRIO.BAIRRO,BRIO.RUA, BRIO.NUMERO, P.SITUACAO FROM BENEFICIARIO BRIO \n"
+                + "JOIN PEDIDO P ON BRIO.ID=P.ID_BENEFICIARIO LEFT JOIN RESULTADO R ON R.ID_PEDIDO=P.ID \n" 
+                + "WHERE P.DATA_PEDIDO >=? AND P.DATA_PEDIDO <=? ";//AND R.ID IS NULL
+        
+
     public void inserir(PedidoAveriguacao pedidoAveriguacao) throws SQLException{
         Connection conexao = null;
         PreparedStatement comando = null;
@@ -98,6 +106,44 @@ public class PedidoAveriguacaoDAO {
         }
         return listaPedidoAveriguacao;
     }    
+    public List<SituacaoBeneficiarios> buscarSistuacaoBeneficiarios(Date dataInicio, Date dataTermino) throws SQLException{
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+        List<SituacaoBeneficiarios> listaSituacaoBeneficiarios = new ArrayList();
+        try{
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_BUSCAR_SITUACAO_BENEFICIARIOS);
+            java.sql.Date dataInicioSql = new java.sql.Date(dataInicio.getTime());
+            comando.setDate(1, dataInicioSql);
+            java.sql.Date dataTerminoSql = new java.sql.Date(dataTermino.getTime());
+            comando.setDate(2, dataTerminoSql);
+            resultado = comando.executeQuery();
+            //O método next retornar boolean informando se existe um próximo
+            //elemento para iterar
+            while (resultado.next()) {
+                SituacaoBeneficiarios situacaoBeneficiarios = new SituacaoBeneficiarios();
+                situacaoBeneficiarios.setDataPedido(resultado.getTimestamp(1));
+                situacaoBeneficiarios.setNis(resultado.getString(2));
+                situacaoBeneficiarios.setNome(resultado.getString(3));
+                situacaoBeneficiarios.setZona(resultado.getString(4));
+                situacaoBeneficiarios.setLocalidade(resultado.getString(5));
+                situacaoBeneficiarios.setBairro(resultado.getString(6));
+                situacaoBeneficiarios.setRua(resultado.getString(7));
+                situacaoBeneficiarios.setNumero(resultado.getString(8));
+                situacaoBeneficiarios.setSituacao(resultado.getString(9));               
+                //Adiciona um item à lista que será retornada
+                listaSituacaoBeneficiarios.add(situacaoBeneficiarios);
+            }
+        } finally {
+            //Todo objeto que referencie o banco de dados deve ser fechado
+            BancoDadosUtil.fecharChamadasBancoDados(conexao, comando, resultado);
+        }
+        if (listaSituacaoBeneficiarios == null) {
+            throw new ConsultaSemResultadoException();
+        }
+        return listaSituacaoBeneficiarios;
+    }
     public List<PedidoAveriguacao> buscarTodos() throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;

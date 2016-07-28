@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 package br.com.sabe.apresentacao;
+import br.com.sabe.apresentacao.classesUteis.DocumentoLimitado;
 import br.com.sabe.entidade.ResultadoAveriguacao;
+import br.com.sabe.entidade.SituacaoBeneficiarios;
 import br.com.sabe.entidade.Usuario;
 import br.com.sabe.negocio.ResultadoAveriguacaoBO;
 import br.com.sabe.negocio.UsuarioBO;
@@ -12,11 +14,18 @@ import br.com.sabe.persistencia.UsuarioDAO;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 /**
  *
  * @author walisson
@@ -25,6 +34,8 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
     ConsultaResultadoAveriguacaoForm consultaResultadoAveriguacao = null;
     List<ResultadoAveriguacao> listaResultadoAveriguacao = new ArrayList<>();
     ResultadoAveriguacao resultadoEmExclusao;
+    ResultadoAveriguacao resultadoAveriguacao;
+    
     /**
      * Creates new form ConsultarResultadoAveriguacao
      */
@@ -65,7 +76,7 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
         ModeloTabelaResultadoAveriguacao modelo = new ModeloTabelaResultadoAveriguacao();
         tblResultadoAveriguacao.setModel(modelo);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -81,7 +92,7 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
         btnEditar = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
         btnFechar = new javax.swing.JButton();
-        btnExcluir3 = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
         pnlFiltro = new javax.swing.JPanel();
         lblNis = new javax.swing.JLabel();
         txtNis = new javax.swing.JFormattedTextField();
@@ -129,11 +140,11 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
             }
         });
 
-        btnExcluir3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/rubbish7 (2).png"))); // NOI18N
-        btnExcluir3.setText("Excluir");
-        btnExcluir3.addActionListener(new java.awt.event.ActionListener() {
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sabe/apresentacao/icones/rubbish7 (2).png"))); // NOI18N
+        btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExcluir3ActionPerformed(evt);
+                btnExcluirActionPerformed(evt);
             }
         });
 
@@ -149,8 +160,8 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
                         .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnExcluir3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
+                        .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnFechar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -163,7 +174,7 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
                 .addGroup(pnlResultado2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlResultado2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnExcluir3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnFechar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
@@ -256,7 +267,7 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnNovoActionPerformed
 
-    private void btnExcluir3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluir3ActionPerformed
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         int linhaSelecionada = tblResultadoAveriguacao.getSelectedRow();
         try {
             this.resultadoEmExclusao = listaResultadoAveriguacao.get(linhaSelecionada);
@@ -278,7 +289,7 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
                     "Selecione uma linha da tabela para poder excluir alguma venda.",
                     "Exclusão de venda",JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btnExcluir3ActionPerformed
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -318,7 +329,7 @@ public class ConsultaResultadoAveriguacaoForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditar;
-    private javax.swing.JButton btnExcluir3;
+    private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnNovo;
     private javax.swing.JComboBox cmbCurso;

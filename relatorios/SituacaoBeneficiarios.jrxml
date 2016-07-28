@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e153f06c-e2d6-48d4-ba71-44aac32308e7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="12"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="zona" class="java.lang.String"/>
+	<field name="nis" class="java.lang.String"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="dataPedido" class="java.lang.String"/>
+	<field name="situacao" class="java.lang.String"/>
+	<field name="localidade" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="rua" class="java.lang.String"/>
+	<field name="numero" class="java.lang.String"/>
+	<field name="zona" class="java.lang.String"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement uuid="b2cf8828-51a9-4979-8e59-0c2298ef1847" mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699"/>
+				<staticText>
+					<reportElement uuid="68ad62c2-8026-4641-871f-2534007e68ea" x="20" y="20" width="555" height="43" forecolor="#FFFFFF"/>
+					<textElement>
+						<font size="34" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Situação de Beneficiários]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="d6e21796-351f-4f23-ac38-cb88bd8aa39b" x="395" y="63" width="180" height="20" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Add a description here]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21">
+			<staticText>
+				<reportElement uuid="6920657e-d4f3-4b5d-a85d-4c4cbe282456" x="0" y="0" width="61" height="20"/>
+				<textElement/>
+				<text><![CDATA[nis]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="532fc812-b005-4af1-9b24-17aff500eeff" x="61" y="0" width="61" height="20"/>
+				<textElement/>
+				<text><![CDATA[nome]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f002bbb1-4e98-4c7b-9981-a3460199f657" x="122" y="0" width="61" height="20"/>
+				<textElement/>
+				<text><![CDATA[dataPedido]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b5db7413-d0a9-4960-85cf-8ab94e1ea08c" x="183" y="0" width="61" height="20"/>
+				<textElement/>
+				<text><![CDATA[situacao]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c6f0f6b0-7eb8-48d6-a8f2-b30cfa82c015" x="244" y="0" width="61" height="20"/>
+				<textElement/>
+				<text><![CDATA[localidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5d503515-2dad-491d-8374-d264f0af8103" x="305" y="0" width="61" height="20"/>
+				<textElement/>
+				<text><![CDATA[bairro]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c56fdb15-a998-442b-b654-a58f9406c074" x="366" y="0" width="61" height="20"/>
+				<textElement/>
+				<text><![CDATA[rua]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d157f12e-9f3b-4d72-8f3e-013fe78d4404" x="427" y="0" width="61" height="20"/>
+				<textElement/>
+				<text><![CDATA[numero]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6b704b2f-5eac-4ea0-9a52-f5297b9f351d" x="488" y="0" width="61" height="20"/>
+				<textElement/>
+				<text><![CDATA[zona]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30">
+			<line>
+				<reportElement uuid="e25e9f54-dfa0-46f1-a325-9381ec513896" positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="c2207b2e-f8b8-44f3-ac7f-928b8042522c" x="0" y="0" width="61" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{nis}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4e8c1c82-8f4c-4003-b8eb-a6054b437a86" x="61" y="0" width="61" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="19f180f0-d80e-41d7-9e83-6cdc82f22d88" x="122" y="0" width="61" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{dataPedido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a7953b71-c9c7-44e5-8d71-e8100b468f00" x="183" y="0" width="61" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{situacao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3d6309b6-8c5b-457c-ad32-66eaba8c1248" x="244" y="0" width="61" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{localidade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1acce342-af8f-4931-939f-48294af5e2d1" x="305" y="0" width="61" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{bairro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5a860ac9-f0fd-437c-9a11-688cc9459015" x="366" y="0" width="61" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{rua}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f8a6a6a7-5f4e-42ed-9d7b-2908a8c5bffe" x="427" y="0" width="61" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5fda3264-9f9c-494a-b6f5-6184b4461f77" x="488" y="0" width="61" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{zona}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20">
+			<textField>
+				<reportElement uuid="b8f01925-cc37-4e81-b39b-1e5310e75c15" mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="380bd303-623a-434e-b479-6e83c1e50c5c" mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="b8bdba70-837c-49e4-a4a3-360c5c1560d2" x="0" y="4" width="100" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>
