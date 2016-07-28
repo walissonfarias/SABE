@@ -14,26 +14,14 @@ public class SituacaoBeneficiarios {
     private String nome;
     private Date dataPedido;
     private String situacao; 
-    private String zona;
     private String localidade;
-    private String bairro;
-    private String rua;
-    private String numero;
-
+   
     public Date getDataPedido() {
         return dataPedido;
     }
 
     public void setDataPedido(Date dataPedido) {
         this.dataPedido = dataPedido;
-    }
-
-    public String getZona() {
-        return zona;
-    }
-
-    public void setZona(String zona) {
-        this.zona = zona;
     }
 
     public String getLocalidade() {
@@ -44,29 +32,6 @@ public class SituacaoBeneficiarios {
         this.localidade = localidade;
     }
 
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getRua() {
-        return rua;
-    }
-
-    public void setRua(String rua) {
-        this.rua = rua;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
     public String getSituacao() {
         return situacao;
     }

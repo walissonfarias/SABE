@@ -9,10 +9,6 @@
 	<field name="dataPedido" class="java.lang.String"/>
 	<field name="situacao" class="java.lang.String"/>
 	<field name="localidade" class="java.lang.String"/>
-	<field name="bairro" class="java.lang.String"/>
-	<field name="rua" class="java.lang.String"/>
-	<field name="numero" class="java.lang.String"/>
-	<field name="zona" class="java.lang.String"/>
 	<background>
 		<band/>
 	</background>
@@ -32,7 +28,7 @@
 					<textElement textAlignment="Right">
 						<font size="14" isBold="false"/>
 					</textElement>
-					<text><![CDATA[Add a description here]]></text>
+					<text><![CDATA[]]></text>
 				</staticText>
 			</frame>
 		</band>
@@ -67,26 +63,6 @@
 				<textElement/>
 				<text><![CDATA[localidade]]></text>
 			</staticText>
-			<staticText>
-				<reportElement uuid="5d503515-2dad-491d-8374-d264f0af8103" x="305" y="0" width="61" height="20"/>
-				<textElement/>
-				<text><![CDATA[bairro]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="c56fdb15-a998-442b-b654-a58f9406c074" x="366" y="0" width="61" height="20"/>
-				<textElement/>
-				<text><![CDATA[rua]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="d157f12e-9f3b-4d72-8f3e-013fe78d4404" x="427" y="0" width="61" height="20"/>
-				<textElement/>
-				<text><![CDATA[numero]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="6b704b2f-5eac-4ea0-9a52-f5297b9f351d" x="488" y="0" width="61" height="20"/>
-				<textElement/>
-				<text><![CDATA[zona]]></text>
-			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -118,26 +94,6 @@
 				<reportElement uuid="3d6309b6-8c5b-457c-ad32-66eaba8c1248" x="244" y="0" width="61" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{localidade}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="1acce342-af8f-4931-939f-48294af5e2d1" x="305" y="0" width="61" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{bairro}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="5a860ac9-f0fd-437c-9a11-688cc9459015" x="366" y="0" width="61" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{rua}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="f8a6a6a7-5f4e-42ed-9d7b-2908a8c5bffe" x="427" y="0" width="61" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="5fda3264-9f9c-494a-b6f5-6184b4461f77" x="488" y="0" width="61" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{zona}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,9 +38,9 @@ public class ResultadoAveriguacaoDAO {
             + "BRIO.BAIRRO,BRIO.RUA, BRIO.NUMERO, BRIO.RENDA_FAMILIAR,BRIO.RENDA_PER_CAPTA,P.ID, P.DATA_PEDIDO, P.SITUACAO "
             + " FROM BENEFICIARIO BRIO JOIN PEDIDO P ON BRIO.ID=P.ID_BENEFICIARIO "
             + "LEFT JOIN RESULTADO R ON P.ID=R.ID_PEDIDO";
-    private static final String SQL_BUSCAR_LOCALIDADES_VISITADAS = "SELECT R.DECISAO, BRIO.NIS, BRIO.NOME, \n" 
-            +"BRIO.ZONA, BRIO.LOCALIDADE,BRIO.BAIRRO, P.SITUACAO FROM BENEFICIARIO BRIO JOIN PEDIDO P ON BRIO.ID=P.ID_BENEFICIARIO \n" 
-            +"JOIN RESULTADO R ON P.ID=R.ID_PEDIDO WHERE R.DATA_RESULTADO >=? AND R.DATA_RESULTADO<=? ORDER BY BRIO.ZONA, BRIO.LOCALIDADE";   
+    private static final String SQL_BUSCAR_LOCALIDADES_VISITADAS = "SELECT BRIO.ZONA, BRIO.LOCALIDADE,BRIO.BAIRRO, R.DATA_RESULTADO"
+            + " FROM BENEFICIARIO BRIO JOIN PEDIDO P ON BRIO.ID=P.ID_BENEFICIARIO "
+            + "JOIN RESULTADO R ON P.ID=R.ID_PEDIDO WHERE R.DATA_RESULTADO >=? AND R.DATA_RESULTADO<=? ORDER BY BRIO.ZONA, BRIO.LOCALIDADE";   
     private static final String SQL_BUSCAR_BY_ID_PEDIDO = "SELECT*FROM RESULTADO WHERE ID_PEDIDO=?";
     private static final String SQL_EXCLUIR = "DELETE FROM RESULTADO WHERE ID=?";
     public void inserir(ResultadoAveriguacao resultadoAveriguacao) throws SQLException{
@@ -185,13 +186,14 @@ public class ResultadoAveriguacaoDAO {
             //elemento para iterar
             while (resultado.next()) {
                 LocalidadesVisitadas localidadesMaisVisitadas = new LocalidadesVisitadas();
-                localidadesMaisVisitadas.setDecisao(resultado.getString(1));        
-                localidadesMaisVisitadas.setNis(resultado.getString(2));
-                localidadesMaisVisitadas.setNome(resultado.getString(3));
-                localidadesMaisVisitadas.setZona(resultado.getString(4));
-                localidadesMaisVisitadas.setLocalidade(resultado.getString(5));
-                localidadesMaisVisitadas.setBairro(resultado.getString(6));                
-                localidadesMaisVisitadas.setSituacao(resultado.getString(7)); 
+                
+                //localidadesMaisVisitadas.setDecisao(resultado.getString(1));        
+                //localidadesMaisVisitadas.setNis(resultado.getString(2));
+                //localidadesMaisVisitadas.setNome(resultado.getString(3));
+                localidadesMaisVisitadas.setZona(resultado.getString(1));
+                localidadesMaisVisitadas.setLocalidade(resultado.getString(2));
+                localidadesMaisVisitadas.setBairro(resultado.getString(3));
+                localidadesMaisVisitadas.setDataResultado(resultado.getDate(4));
                 //Adiciona um item à lista que será retornada
                 listaLocalidadesMaisVisitadas.add(localidadesMaisVisitadas);
             }

@@ -5,6 +5,7 @@
  */
 package br.com.sabe.entidade;
 
+import java.util.Date;
 import javafx.scene.chart.PieChart.Data;
 
 /**
@@ -12,36 +13,17 @@ import javafx.scene.chart.PieChart.Data;
  * @author walisson
  */
 public class LocalidadesVisitadas {
-    private String nis;
-    private String nome;
-    private String decisao;
     private String zona;
     private String localidade;
-    private String bairro; 
-    private String situacao;
+    private String bairro;
+    private Date dataResultado;
 
-    public String getNis() {
-        return nis;
+    public Date getDataResultado() {
+        return dataResultado;
     }
 
-    public void setNis(String nis) {
-        this.nis = nis;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getDecisao() {
-        return decisao;
-    }
-
-    public void setDecisao(String decisao) {
-        this.decisao = decisao;
+    public void setDataResultado(Date dataResultado) {
+        this.dataResultado = dataResultado;
     }
 
     public String getZona() {
@@ -66,13 +48,5 @@ public class LocalidadesVisitadas {
 
     public void setBairro(String bairro) {
         this.bairro = bairro;
-    }
-
-    public String getSituacao() {
-        return situacao;
-    }
-
-    public void setSituacao(String situacao) {
-        this.situacao = situacao;
     }
 }

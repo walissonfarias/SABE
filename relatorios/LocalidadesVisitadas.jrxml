@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ddd48c89-ab44-4cf1-b98b-443b1e6b4a39">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="12"/>
 	<property name="ireport.y" value="0"/>
-	<field name="nis" class="java.lang.String"/>
-	<field name="nome" class="java.lang.String"/>
-	<field name="dataPedido" class="java.lang.String"/>
-	<field name="decisao" class="java.lang.String"/>
 	<field name="zona" class="java.lang.String"/>
 	<field name="localidade" class="java.lang.String"/>
 	<field name="bairro" class="java.lang.String"/>
-	<field name="situacao" class="java.lang.String"/>
+	<field name="dataResultado" class="java.lang.String"/>
 	<background>
 		<band/>
 	</background>
@@ -19,18 +15,18 @@
 			<frame>
 				<reportElement uuid="cddf300c-9fa7-43a9-bf2e-e57ac9e496a7" mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699"/>
 				<staticText>
-					<reportElement uuid="77c1a5ec-aa6e-4764-b4f4-8baea93649b4" x="20" y="20" width="407" height="43" forecolor="#FFFFFF"/>
+					<reportElement uuid="77c1a5ec-aa6e-4764-b4f4-8baea93649b4" x="20" y="20" width="446" height="43" forecolor="#FFFFFF"/>
 					<textElement>
 						<font size="34" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Localidade Visitadas]]></text>
+					<text><![CDATA[Localidades Visitadas]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="87e7902c-1c87-4797-963e-6a2462434c5d" x="395" y="72" width="180" height="20" forecolor="#FFFFFF"/>
+					<reportElement uuid="87e7902c-1c87-4797-963e-6a2462434c5d" x="175" y="63" width="400" height="20" forecolor="#FFFFFF"/>
 					<textElement textAlignment="Right">
 						<font size="14" isBold="false"/>
 					</textElement>
-					<text><![CDATA[Localidades Visitadas ]]></text>
+					<text><![CDATA[Relatório de visitas para Averiguação]]></text>
 				</staticText>
 			</frame>
 		</band>
@@ -41,78 +37,50 @@
 	<columnHeader>
 		<band height="21">
 			<staticText>
-				<reportElement uuid="f16d8851-4e37-4219-a7ab-450aaa92aacb" x="0" y="0" width="79" height="20"/>
+				<reportElement uuid="706bd203-b57a-4a96-87b7-da0233249063" x="215" y="1" width="185" height="20"/>
 				<textElement/>
-				<text><![CDATA[nis]]></text>
+				<text><![CDATA[Localidade:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="25ac5654-d06a-4511-9e79-2f3bb7f20fe3" x="79" y="0" width="79" height="20"/>
+				<reportElement uuid="aeb515e1-9d27-4603-9e72-6e2aa509d2ee" x="403" y="0" width="94" height="20"/>
 				<textElement/>
-				<text><![CDATA[nome]]></text>
+				<text><![CDATA[Bairro:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="a9bf95ea-1c16-4c10-9344-bcea46a4d05b" x="316" y="0" width="79" height="20"/>
+				<reportElement uuid="9a5afb70-43cd-4269-be67-d7803636a252" x="112" y="0" width="100" height="20"/>
 				<textElement/>
-				<text><![CDATA[bairro]]></text>
+				<text><![CDATA[Zona]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="46296b70-ce42-47d3-b2f7-037365019c87" x="395" y="1" width="79" height="20"/>
+				<reportElement uuid="eab3cf43-ebc6-45c5-8812-92f6ba355e31" x="11" y="1" width="100" height="20"/>
 				<textElement/>
-				<text><![CDATA[situacao]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="75eb2353-138a-4c02-8b8f-316e81e5ba91" x="237" y="0" width="79" height="20"/>
-				<textElement/>
-				<text><![CDATA[localidade]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="2faddf91-d6cf-462a-968e-9ad1b10040b4" x="478" y="1" width="100" height="20"/>
-				<textElement/>
-				<text><![CDATA[decisao]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="deeca9e4-7d53-4ec2-bfd3-e65077c386ec" x="169" y="1" width="68" height="20"/>
-				<textElement/>
-				<text><![CDATA[dataPedido]]></text>
+				<text><![CDATA[Data da Visita]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="21">
 			<textField>
-				<reportElement uuid="5e6c4bf8-ca28-4aa5-a371-8c10187dfaf8" x="0" y="0" width="79" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{nis}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="a01c2fd3-faba-4fa8-9985-c86ea03dc08f" x="79" y="0" width="79" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="37e4972c-f67a-4c64-a64c-caa519e21b5c" x="316" y="0" width="79" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{bairro}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="bdb9b88f-0008-464d-94b3-18f32a87d7a8" x="395" y="1" width="79" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{situacao}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="0b67beab-2448-46e5-a57f-aaad4267648c" x="237" y="0" width="79" height="20"/>
+				<reportElement uuid="493903a4-6548-47a3-a25e-2146ab40546a" x="215" y="1" width="185" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{localidade}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="4d8f84c4-94d6-493c-b5b4-0e66d6a3a8b0" x="478" y="1" width="100" height="20"/>
+				<reportElement uuid="d49d27a0-6c01-4327-b706-d103b7e3601c" x="403" y="0" width="94" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA[$F{decisao}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{bairro}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy">
-				<reportElement uuid="4407b47e-18f9-4c23-ac4f-af3739371e0c" x="169" y="1" width="68" height="20"/>
+			<textField>
+				<reportElement uuid="5ef891cc-1188-4563-bde9-c612ed0d206c" x="112" y="0" width="100" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA[$F{dataPedido}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{zona}.equals("U")?"Urbana": "Rural"
+
+]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yy">
+				<reportElement uuid="5036fcc4-093d-49c7-b7d7-49129c0d60f6" x="11" y="1" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{dataResultado}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

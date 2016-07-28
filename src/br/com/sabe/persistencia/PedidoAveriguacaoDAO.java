@@ -31,10 +31,8 @@ public class PedidoAveriguacaoDAO {
             + "BRIO.BAIRRO,BRIO.RUA, BRIO.NUMERO, BRIO.RENDA_FAMILIAR,BRIO.RENDA_PER_CAPTA,P.ID, P.DATA_PEDIDO, P.SITUACAO "
             + "FROM BENEFICIARIO BRIO JOIN PEDIDO P ON BRIO.ID=P.ID_BENEFICIARIO"; 
     public static final String SQL_EXCLUIR = "DELETE FROM PEDIDO WHERE ID=?";
-        private static final String SQL_BUSCAR_SITUACAO_BENEFICIARIOS = "SELECT P.DATA_PEDIDO, BRIO.NIS, BRIO.NOME,\n" 
-                + "BRIO.ZONA, BRIO.LOCALIDADE, BRIO.BAIRRO,BRIO.RUA, BRIO.NUMERO, P.SITUACAO FROM BENEFICIARIO BRIO \n"
-                + "JOIN PEDIDO P ON BRIO.ID=P.ID_BENEFICIARIO LEFT JOIN RESULTADO R ON R.ID_PEDIDO=P.ID \n" 
-                + "WHERE P.DATA_PEDIDO >=? AND P.DATA_PEDIDO <=? ";//AND R.ID IS NULL
+        private static final String SQL_BUSCAR_SITUACAO_BENEFICIARIOS = "SELECT P.DATA_PEDIDO, BRIO.NIS, BRIO.NOME, "
+                + " BRIO.LOCALIDADE, P.SITUACAO FROM BENEFICIARIO BRIO JOIN PEDIDO P ON BRIO.ID=P.ID_BENEFICIARIO LEFT JOIN RESULTADO R ON R.ID_PEDIDO=P.ID";
         
 
     public void inserir(PedidoAveriguacao pedidoAveriguacao) throws SQLException{
@@ -123,15 +121,11 @@ public class PedidoAveriguacaoDAO {
             //elemento para iterar
             while (resultado.next()) {
                 SituacaoBeneficiarios situacaoBeneficiarios = new SituacaoBeneficiarios();
-                situacaoBeneficiarios.setDataPedido(resultado.getTimestamp(1));
+                situacaoBeneficiarios.setDataPedido(resultado.getDate(1));
                 situacaoBeneficiarios.setNis(resultado.getString(2));
                 situacaoBeneficiarios.setNome(resultado.getString(3));
-                situacaoBeneficiarios.setZona(resultado.getString(4));
-                situacaoBeneficiarios.setLocalidade(resultado.getString(5));
-                situacaoBeneficiarios.setBairro(resultado.getString(6));
-                situacaoBeneficiarios.setRua(resultado.getString(7));
-                situacaoBeneficiarios.setNumero(resultado.getString(8));
-                situacaoBeneficiarios.setSituacao(resultado.getString(9));               
+                situacaoBeneficiarios.setLocalidade(resultado.getString(4));
+                situacaoBeneficiarios.setSituacao(resultado.getString(5));               
                 //Adiciona um item à lista que será retornada
                 listaSituacaoBeneficiarios.add(situacaoBeneficiarios);
             }
