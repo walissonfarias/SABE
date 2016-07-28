@@ -152,14 +152,17 @@ public class CadastroBeneficiarioForm extends javax.swing.JFrame {
         cmbBeneficios.setSelectedIndex(0);
         btnZona.clearSelection();
     }
-    public void validarCamposObrigratorios(){
-        if(txtNome.getText().trim().isEmpty() ||
-            txtLocalidade.getText().trim().isEmpty())
-        {
+    public void validarCamposObrigratorios(){            
+        if(txtNis.getText().trim().isEmpty()||
+                txtNome.getText().trim().isEmpty()||
+                txtLocalidade.getText().trim().isEmpty()||
+                txtBairro.getText().trim().isEmpty()||
+                txtNis.getText().trim().isEmpty()
+            ){
             throw new CampoObrigatorioException();
-        }
-    }
-     private void cadastrarPedidoAveriguacao() throws SQLException {
+        } 
+    }          
+    private void cadastrarPedidoAveriguacao() throws SQLException {
         String mensagem = "Deseja cadastrar um Pedido de Averiguação?";
         String titulo = "Tela cadastro de beneficiario";
         int resposta = JOptionPane.showConfirmDialog(null, mensagem, titulo, JOptionPane.YES_NO_OPTION);
